@@ -469,11 +469,11 @@ PLAN:
       {/* Features Section */}
       <section id="features" className="py-20 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6 animate-slide-up">
               Why Healthcare Professionals Choose Noto
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto animate-slide-up" style={{animationDelay: '0.2s'}}>
               Save hours of documentation time while maintaining the highest standards of medical reporting
             </p>
           </div>
@@ -506,11 +506,11 @@ PLAN:
       {/* Use Cases Section */}
       <section id="use-cases" className="py-20 px-6 lg:px-8 bg-gray-950/30">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6 animate-slide-up">
               Built for Every Healthcare Setting
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto animate-slide-up" style={{animationDelay: '0.2s'}}>
               From emergency departments to private practice, Noto adapts to your workflow
             </p>
           </div>
@@ -564,17 +564,17 @@ PLAN:
       {/* Pricing Section */}
       <section id="pricing" className="py-20 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6 animate-slide-up">
               Simple, Transparent Pricing
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto animate-slide-up" style={{animationDelay: '0.2s'}}>
               Choose the plan that fits your practice. All plans include unlimited SOAP notes and 24/7 support.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8">
+          <div className="grid md:grid-cols-3 gap-8 animate-fade-in">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8 hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20">
               <h3 className="text-xl font-semibold text-white mb-2">Starter</h3>
               <div className="text-3xl font-bold text-white mb-1">$29<span className="text-lg text-gray-400">/month</span></div>
               <p className="text-gray-400 mb-6">Perfect for individual practitioners</p>
@@ -587,8 +587,8 @@ PLAN:
               <Button className="w-full bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">Get Started</Button>
             </div>
 
-            <div className="bg-gradient-to-b from-blue-900/20 to-purple-900/20 border-2 border-blue-500/50 rounded-2xl p-8 relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-1 rounded-full text-sm">
+            <div className="bg-gradient-to-b from-emerald-900/20 to-teal-900/20 border-2 border-emerald-500/50 rounded-2xl p-8 relative">
+              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-1 rounded-full text-sm">
                 Most Popular
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Professional</h3>
@@ -604,7 +604,7 @@ PLAN:
               <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">Start Free Trial</Button>
             </div>
 
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8 hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20">
               <h3 className="text-xl font-semibold text-white mb-2">Enterprise</h3>
               <div className="text-3xl font-bold text-white mb-1">Custom</div>
               <p className="text-gray-400 mb-6">For large healthcare systems</p>
@@ -624,17 +624,17 @@ PLAN:
       {/* Enterprise Section */}
       <section id="enterprise" className="py-20 px-6 lg:px-8 bg-gray-950/30">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6 animate-slide-up">
               Enterprise Ready
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto animate-slide-up" style={{animationDelay: '0.2s'}}>
               Scalable AI documentation solution built for healthcare organizations
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center animate-fade-in">
+            <div className="space-y-8 animate-slide-up">
               <div>
                 <h3 className="text-xl font-semibold text-white mb-3">Enterprise Security</h3>
                 <p className="text-gray-400 leading-relaxed">
@@ -655,7 +655,7 @@ PLAN:
               </div>
             </div>
 
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8 hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20 animate-slide-up" style={{animationDelay: '0.3s'}}>
               <h3 className="text-xl font-semibold text-white mb-6">Ready to Transform Your Documentation?</h3>
               <div className="space-y-4">
                 <div className="flex items-center text-gray-300">
