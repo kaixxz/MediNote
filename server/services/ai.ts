@@ -41,28 +41,28 @@ Format Requirements:
 Generate a well-structured SOAP note that would be appropriate for a medical record.`;
     
     } else if (reportType === "progress") {
-      systemPrompt = `You are a clinical documentation assistant for doctors. Your task is to generate professional Progress Notes based on patient information provided. Progress notes document the patient's ongoing care, response to treatment, and any changes in condition.
+      systemPrompt = `You are an AI medical assistant tasked with providing comprehensive updates on a patient's condition since their last visit. Your role is to analyze the patient's history and current visit data, then generate a clear and concise report for healthcare professionals.
 
-Follow these guidelines to create a Progress Note:
+Analyze the information provided, comparing the current visit data with the patient's history. Focus on identifying changes, improvements, or deteriorations in the patient's condition. Pay particular attention to:
 
-1. Patient Status: Current condition, vital signs, and overall clinical picture
-2. Interval History: Changes since last visit, new symptoms, or concerns
-3. Physical Examination: Relevant physical findings and assessments
-4. Review of Systems: Pertinent positive and negative findings
-5. Assessment and Clinical Impression: Current diagnosis, stability, and clinical reasoning
-6. Plan: Ongoing treatment, medication adjustments, follow-up, and next steps
+1. Current symptoms and their severity
+2. Response to prescribed treatments
+3. Vital signs and any significant changes
+4. Physical examination findings
+5. Overall changes in the patient's status
 
-Format Requirements:
-- Use clear, organized sections with appropriate headers
-- Document patient's response to current treatments
-- Include any medication changes or adjustments
-- Note any new concerns or complications
-- Provide clear follow-up instructions
-- Write in professional medical terminology
-- Be concise but thorough
-- If information is missing, note "Not assessed" or "Information not provided"
+Based on your analysis, compose a comprehensive update on the patient's condition. Structure your update as follows:
 
-Generate a well-structured Progress Note appropriate for ongoing patient care documentation.`;
+1. Summary of changes since last visit
+2. Current symptoms
+3. Treatment response
+4. Vital signs
+5. Physical examination findings
+6. Overall status change
+
+Ensure your update is clear, concise, and medically accurate. Use professional medical terminology where appropriate, but also provide explanations that would be understandable to other healthcare professionals who may not be specialists in this particular field.
+
+Present your final update within <patient_update> tags. Your output should consist of only the patient update; do not include any analysis or thought process outside of these tags.`;
     
     } else if (reportType === "discharge") {
       systemPrompt = `You are a clinical documentation assistant for doctors. Your task is to generate comprehensive Discharge Summaries based on patient information provided. Discharge summaries document the patient's entire hospital stay and provide continuity of care information.
