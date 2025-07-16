@@ -71,15 +71,23 @@ export function serveStatic(app: Express) {
   const distPath = path.resolve(import.meta.dirname, "../client/dist");
 
   if (!fs.existsSync(distPath)) {
+    console.error(`Build directory not found: ${distPath}`);
+    console.error("Make sure to run 'npm run build' before starting the production server");
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`,
     );
   }
 
+  // Serve static files from the dist directory
   app.use(express.static(distPath));
 
-  // fall through to index.html if the file doesn't exist
+  // fall through to index.html if the file doesn't exist (for SPA routing)
   app.use("*", (_req, res) => {
-    res.sendFile(path.resolve(distPath, "index.html"));
+    const indexPath = path.resolve(distPath, "index.html");
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.status(404).json({ error: "Build files not found. Please run 'npm run build' first." });
+    }
   });
 }

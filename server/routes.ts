@@ -5,6 +5,15 @@ import { generateReportSchema } from "@shared/schema";
 import { generateMedicalReport } from "./services/ai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check endpoint
+  app.get("/api/health", (req, res) => {
+    res.json({ 
+      status: "ok", 
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || "development"
+    });
+  });
+
   // Generate medical report endpoint
   app.post("/api/generate", async (req, res) => {
     try {
