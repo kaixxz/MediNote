@@ -287,7 +287,7 @@ PLAN:
                       </div>
                     </div>
                     <div className="p-6">
-                      <div className="text-xs text-gray-200 leading-relaxed font-mono max-h-40 overflow-y-auto custom-scrollbar">
+                      <div className="text-sm text-gray-200 leading-relaxed max-h-40 overflow-y-auto custom-scrollbar whitespace-pre-line">
                         {demoOutputText}
                       </div>
                     </div>
