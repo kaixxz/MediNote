@@ -384,77 +384,112 @@ PLAN:
               </div>
 
               {/* Generate Button */}
-              <div className="mb-8">
+              <div className="mb-8 relative">
                 <Button
                   onClick={handleGenerate}
                   disabled={generateMutation.isPending}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-6 px-8 rounded-xl h-auto text-lg transition-all duration-300 transform hover:scale-[1.02]"
+                  className="w-full relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white font-bold py-8 px-8 rounded-2xl h-auto text-xl transition-all duration-500 transform hover:scale-[1.02] shadow-2xl shadow-blue-500/30 hover:shadow-blue-500/50 border border-blue-500/20"
                 >
-                  {generateMutation.isPending ? (
-                    <>
-                      <Loader2 className="mr-3 h-6 w-6 animate-spin" />
-                      Generating Professional Report...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="mr-3 h-6 w-6" />
-                      Generate SOAP Note
-                    </>
-                  )}
+                  {/* Animated background gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-2xl animate-shimmer"></div>
+                  
+                  {/* Button content */}
+                  <div className="relative z-10 flex items-center justify-center">
+                    {generateMutation.isPending ? (
+                      <>
+                        <div className="relative">
+                          <div className="w-7 h-7 border-3 border-white/30 border-t-white rounded-full animate-spin mr-4"></div>
+                          <div className="absolute inset-0 w-7 h-7 border-3 border-transparent border-t-blue-300 rounded-full animate-spin" style={{animationDirection: 'reverse', animationDuration: '0.8s'}}></div>
+                        </div>
+                        <div className="flex flex-col items-start">
+                          <span className="text-lg font-bold">AI Processing...</span>
+                          <span className="text-sm text-blue-100 opacity-90">Analyzing clinical data</span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="mr-4 relative">
+                          <Sparkles className="w-7 h-7 animate-pulse" />
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-ping"></div>
+                        </div>
+                        <div className="flex flex-col items-start">
+                          <span className="text-lg font-bold">Generate Professional SOAP Note</span>
+                          <span className="text-sm text-blue-100 opacity-90">Powered by Claude AI • Takes 3-5 seconds</span>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600/0 via-white/5 to-purple-600/0 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                 </Button>
               </div>
 
               {/* Results Section */}
               {showResults && (
                 <div className="animate-fade-in">
-                  <Card className="bg-gray-800/80 border border-gray-600 rounded-xl overflow-hidden">
-                    <CardContent className="p-0">
-                      <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 p-6 border-b border-gray-600">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-                              <FileText className="w-5 h-5 text-white" />
-                            </div>
-                            <h3 className="text-xl font-semibold text-white">Generated SOAP Note</h3>
+                  <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/60 backdrop-blur-xl border border-gray-600/50 rounded-3xl overflow-hidden shadow-2xl relative">
+                    {/* Animated background elements */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-blue-500/5 rounded-3xl"></div>
+                    <div className="absolute top-4 right-4 w-24 h-24 bg-gradient-to-br from-green-400/10 to-blue-400/10 rounded-full blur-2xl animate-float"></div>
+                    
+                    {/* Header */}
+                    <div className="relative z-10 bg-gradient-to-r from-green-600/15 via-blue-600/15 to-purple-600/15 p-8 border-b border-gray-600/30">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
+                            <FileText className="w-6 h-6 text-white" />
                           </div>
-                          <Button
-                            onClick={handleCopy}
-                            variant="outline"
-                            size="sm"
-                            className="bg-gray-700 hover:bg-gray-600 text-gray-200 hover:text-white border-gray-600 transition-all duration-200"
-                          >
-                            <Copy className="w-4 h-4 mr-2" />
-                            Copy Report
-                          </Button>
+                          <div>
+                            <h3 className="text-2xl font-bold text-white mb-1">Generated SOAP Note</h3>
+                            <div className="flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                              <span className="text-sm text-gray-300 font-medium">Professional Medical Documentation</span>
+                            </div>
+                          </div>
                         </div>
+                        <Button
+                          onClick={handleCopy}
+                          className="bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white border border-gray-500/50 px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                        >
+                          <Copy className="w-4 h-4 mr-2" />
+                          Copy Report
+                        </Button>
                       </div>
+                    </div>
 
-                      <div className="p-6">
-                        <div className="text-gray-100 leading-relaxed text-lg whitespace-pre-wrap">
+                    {/* Content */}
+                    <div className="relative z-10 p-8">
+                      <div className="bg-gray-800/50 border border-gray-600/30 rounded-2xl p-8 backdrop-blur-sm">
+                        <div className="text-gray-100 leading-relaxed text-lg whitespace-pre-wrap font-mono tracking-wide">
                           {generatedReport}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
 
-                  {/* Results Actions */}
-                  <div className="mt-6 flex flex-col sm:flex-row gap-4">
+                  {/* Enhanced Action Buttons */}
+                  <div className="mt-8 flex flex-col sm:flex-row gap-4">
                     <Button
                       onClick={handleRegenerate}
-                      variant="outline"
-                      className="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 hover:text-white border-gray-600 py-3 rounded-xl transition-all duration-200"
                       disabled={generateMutation.isPending}
+                      className="flex-1 bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white border border-gray-600/50 py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg relative overflow-hidden"
                     >
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Regenerate
+                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="relative z-10 flex items-center justify-center">
+                        <Sparkles className="w-5 h-5 mr-2" />
+                        <span className="font-semibold">Regenerate with AI</span>
+                      </div>
                     </Button>
                     <Button
                       onClick={handleNewReport}
-                      variant="outline"
-                      className="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-200 hover:text-white border-gray-600 py-3 rounded-xl transition-all duration-200"
+                      className="flex-1 bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white border border-gray-600/50 py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg relative overflow-hidden"
                     >
-                      <FileText className="w-4 h-4 mr-2" />
-                      New Report
+                      <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-blue-600/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="relative z-10 flex items-center justify-center">
+                        <FileText className="w-5 h-5 mr-2" />
+                        <span className="font-semibold">Create New Report</span>
+                      </div>
                     </Button>
                   </div>
                 </div>
