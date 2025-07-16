@@ -1,8 +1,8 @@
-# Medical Report Generator
+# Medinote - Medical Report Generator
 
 ## Overview
 
-This is a full-stack web application that generates medical documentation, specifically SOAP notes, using AI. The application features a React frontend with a modern UI built using shadcn/ui components, an Express.js backend, and integrates with Anthropic's Claude AI for report generation.
+Medinote is a full-stack web application that generates medical documentation, specifically SOAP notes, using AI. The application features a React frontend with a modern UI built using shadcn/ui components, an Express.js backend, and integrates with Anthropic's Claude AI for report generation.
 
 ## User Preferences
 
@@ -117,6 +117,13 @@ Preferred communication style: Simple, everyday language.
 The application is designed to be easily deployable to platforms like Replit, with proper environment variable configuration for database and AI service connections.
 
 ## Recent Changes
+
+### July 16, 2025 - Final Updates and Branding
+- **Rebranded to "Medinote"**: Updated all references from "Noto" to "Medinote" throughout the application
+- **Custom Discharge Summary Prompt**: Implemented user-provided discharge summary prompt with structured XML output
+- **Enhanced Progress Notes**: Integrated custom user-provided progress notes prompt for comprehensive patient updates
+- **TypeScript Fixes**: Resolved type safety issues with report type selections
+- **Complete Functionality**: All three report types (SOAP, Progress Notes, Discharge Summary) fully operational
 
 ### July 16, 2025 - Progress Notes and Discharge Summary Implementation
 - Added complete Progress Notes functionality with specialized AI prompts
