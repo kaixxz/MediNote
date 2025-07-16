@@ -89,6 +89,16 @@ PLAN:
     });
   };
 
+  const smoothScrollTo = (elementId: string) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   const generateMutation = useMutation({
     mutationFn: async (data: GenerateReportRequest): Promise<GenerateReportResponse> => {
       const res = await apiRequest("POST", "/api/generate", data);
@@ -166,10 +176,10 @@ PLAN:
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-white">Noto</h1>
             <div className="hidden md:flex items-center space-x-8 text-gray-300">
-              <a href="#features" className="hover:text-white transition-colors">Features</a>
-              <a href="#use-cases" className="hover:text-white transition-colors">Use Cases</a>
-              <a href="#pricing" className="hover:text-white transition-colors">Pricing</a>
-              <a href="#enterprise" className="hover:text-white transition-colors">Enterprise</a>
+              <button onClick={() => smoothScrollTo('features')} className="hover:text-white transition-all duration-300 hover:scale-105">Features</button>
+              <button onClick={() => smoothScrollTo('use-cases')} className="hover:text-white transition-all duration-300 hover:scale-105">Use Cases</button>
+              <button onClick={() => smoothScrollTo('pricing')} className="hover:text-white transition-all duration-300 hover:scale-105">Pricing</button>
+              <button onClick={() => smoothScrollTo('enterprise')} className="hover:text-white transition-all duration-300 hover:scale-105">Enterprise</button>
             </div>
           </div>
         </div>
@@ -217,65 +227,97 @@ PLAN:
 
           {/* Right: Animated Demo */}
           <div className="relative animate-slide-in-right">
-            <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-2xl p-6 shadow-2xl animate-glow">
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              </div>
+            <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-xl border border-gray-600/50 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+              {/* Animated background elements */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-3xl"></div>
+              <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl animate-float"></div>
+              <div className="absolute bottom-4 left-4 w-24 h-24 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-2xl animate-float" style={{animationDelay: '1s'}}></div>
               
-              {/* Demo Input */}
-              <div className="mb-4">
-                <label className="block text-sm text-gray-400 mb-2">Patient Notes</label>
-                <div className="bg-gray-800 border border-gray-600 rounded-xl p-4 min-h-[120px] relative">
-                  <div className="text-gray-200 leading-relaxed">
-                    {demoText}
-                    {isTyping && <span className="animate-pulse">|</span>}
+              <div className="relative z-10">
+                {/* Window controls */}
+                <div className="flex items-center space-x-2 mb-6">
+                  <div className="w-3 h-3 bg-red-400 rounded-full animate-pulse" style={{animationDelay: '0s'}}></div>
+                  <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" style={{animationDelay: '1s'}}></div>
+                  <div className="ml-4 text-xs text-gray-400 font-mono">noto.ai/dashboard</div>
+                </div>
+                
+                {/* Demo Input */}
+                <div className="mb-6">
+                  <div className="text-xs text-gray-400 mb-2 font-medium tracking-wide">PATIENT NOTES</div>
+                  <div className="bg-gray-800/70 border border-gray-600/50 rounded-2xl p-6 min-h-[140px] relative backdrop-blur-sm">
+                    <div className="text-gray-100 leading-relaxed text-sm">
+                      {demoText}
+                      {isTyping && <span className="bg-blue-400 text-blue-400 animate-pulse">|</span>}
+                    </div>
+                    {/* Typing indicator */}
+                    {isTyping && (
+                      <div className="absolute bottom-3 right-3 flex items-center space-x-1">
+                        <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0s'}}></div>
+                        <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-              
-              {/* Demo Generate Button */}
-              <Button 
-                className="w-full mb-4 bg-blue-600 hover:bg-blue-700 rounded-xl"
-                disabled={isTyping}
-              >
-                {isTyping ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  "Generate SOAP Note"
+                
+                {/* Demo Generate Button */}
+                <Button 
+                  className="w-full mb-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl py-4 text-sm font-semibold transition-all duration-300 transform hover:scale-[1.02] shadow-lg shadow-blue-500/25"
+                  disabled={isTyping}
+                >
+                  {isTyping ? (
+                    <>
+                      <div className="flex items-center justify-center">
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                        AI Processing...
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Generate SOAP Note
+                    </>
+                  )}
+                </Button>
+                
+                {/* Demo Output */}
+                {showDemoOutput && (
+                  <div className="bg-gray-800/70 border border-gray-600/50 rounded-2xl overflow-hidden animate-fade-in backdrop-blur-sm">
+                    <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 px-6 py-4 border-b border-gray-600/30">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                          <span className="text-xs text-gray-300 font-medium tracking-wide">GENERATED SOAP NOTE</span>
+                        </div>
+                        <Button size="sm" variant="ghost" className="text-xs text-gray-400 hover:text-white transition-colors">
+                          <Copy className="w-3 h-3 mr-1" />
+                          Copy
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="p-6">
+                      <div className="text-xs text-gray-200 leading-relaxed font-mono max-h-40 overflow-y-auto custom-scrollbar">
+                        {demoOutputText}
+                      </div>
+                    </div>
+                  </div>
                 )}
-              </Button>
-              
-              {/* Demo Output */}
-              {showDemoOutput && (
-                <div className="bg-gray-800 border border-gray-600 rounded-xl p-4 animate-fade-in">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-sm text-gray-400">Generated SOAP Note</span>
-                    <Button size="sm" variant="outline" className="text-xs">
-                      <Copy className="w-3 h-3 mr-1" />
-                      Copy
-                    </Button>
-                  </div>
-                  <div className="text-sm text-gray-200 leading-relaxed whitespace-pre-line max-h-40 overflow-y-auto">
-                    {demoOutputText}
-                  </div>
-                </div>
-              )}
+              </div>
             </div>
             
-            {/* Scroll Indicator */}
-            <div className="absolute -bottom-16 left-1/2 transform -translate-x-1/2 animate-bounce">
+            {/* Enhanced Scroll Indicator */}
+            <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2">
               <Button 
                 variant="ghost" 
                 size="sm"
                 onClick={scrollToInput}
-                className="text-gray-500 hover:text-gray-300"
+                className="text-gray-400 hover:text-white transition-all duration-300 animate-bounce hover:animate-none group"
               >
-                <ArrowDown className="w-5 h-5" />
+                <div className="flex flex-col items-center space-y-1">
+                  <ArrowDown className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <span className="text-xs opacity-75">Try it</span>
+                </div>
               </Button>
             </div>
           </div>
