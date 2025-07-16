@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { generateReportSchema } from "@shared/schema";
-import { generateSOAPNote } from "./services/ai";
+import { generateMedicalReport } from "./services/ai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Generate medical report endpoint
@@ -10,15 +10,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { reportType, patientNotes } = generateReportSchema.parse(req.body);
       
-      let generatedReport: string;
-      
-      if (reportType === "soap") {
-        generatedReport = await generateSOAPNote(patientNotes);
-      } else {
-        return res.status(400).json({ 
-          message: "Report type not supported yet" 
-        });
-      }
+      const generatedReport = await generateMedicalReport(patientNotes, reportType);
       
       // Save the report to storage
       await storage.createReport({

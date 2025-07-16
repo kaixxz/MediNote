@@ -28,7 +28,7 @@ export const insertReportSchema = createInsertSchema(reports).pick({
 });
 
 export const generateReportSchema = z.object({
-  reportType: z.string().min(1),
+  reportType: z.enum(["soap", "progress", "discharge"]),
   patientNotes: z.string().min(1).max(2000),
 });
 
