@@ -388,10 +388,10 @@ PLAN:
                 <Button
                   onClick={handleGenerate}
                   disabled={generateMutation.isPending}
-                  className="w-full relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 hover:from-blue-700 hover:via-purple-700 hover:to-blue-800 text-white font-bold py-8 px-8 rounded-2xl h-auto text-xl transition-all duration-500 transform hover:scale-[1.02] shadow-2xl shadow-blue-500/30 hover:shadow-blue-500/50 border border-blue-500/20"
+                  className="w-full relative overflow-hidden bg-gradient-to-r from-slate-800 via-gray-800 to-slate-900 hover:from-slate-700 hover:via-gray-700 hover:to-slate-800 text-white font-bold py-8 px-8 rounded-2xl h-auto text-xl transition-all duration-500 transform hover:scale-[1.02] shadow-2xl shadow-black/40 hover:shadow-black/60 border border-slate-600/30"
                 >
                   {/* Animated background gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-2xl animate-shimmer"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-gray-400/10 rounded-2xl animate-shimmer"></div>
                   
                   {/* Button content */}
                   <div className="relative z-10 flex items-center justify-center">
@@ -399,29 +399,29 @@ PLAN:
                       <>
                         <div className="relative">
                           <div className="w-7 h-7 border-3 border-white/30 border-t-white rounded-full animate-spin mr-4"></div>
-                          <div className="absolute inset-0 w-7 h-7 border-3 border-transparent border-t-blue-300 rounded-full animate-spin" style={{animationDirection: 'reverse', animationDuration: '0.8s'}}></div>
+                          <div className="absolute inset-0 w-7 h-7 border-3 border-transparent border-t-gray-300 rounded-full animate-spin" style={{animationDirection: 'reverse', animationDuration: '0.8s'}}></div>
                         </div>
                         <div className="flex flex-col items-start">
                           <span className="text-lg font-bold">AI Processing...</span>
-                          <span className="text-sm text-blue-100 opacity-90">Analyzing clinical data</span>
+                          <span className="text-sm text-gray-300 opacity-90">Analyzing clinical data</span>
                         </div>
                       </>
                     ) : (
                       <>
                         <div className="mr-4 relative">
                           <Sparkles className="w-7 h-7 animate-pulse" />
-                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full animate-ping"></div>
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-ping"></div>
                         </div>
                         <div className="flex flex-col items-start">
                           <span className="text-lg font-bold">Generate Professional SOAP Note</span>
-                          <span className="text-sm text-blue-100 opacity-90">Powered by Claude AI • Takes 3-5 seconds</span>
+                          <span className="text-sm text-gray-300 opacity-90">Powered by Claude AI • Takes 3-5 seconds</span>
                         </div>
                       </>
                     )}
                   </div>
                   
                   {/* Glow effect */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-600/0 via-white/5 to-purple-600/0 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-slate-600/0 via-white/5 to-slate-600/0 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                 </Button>
               </div>
 
