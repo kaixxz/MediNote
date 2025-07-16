@@ -229,9 +229,9 @@ PLAN:
           <div className="relative animate-slide-in-right">
             <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-xl border border-gray-600/50 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
               {/* Animated background elements */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-3xl"></div>
-              <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-to-br from-blue-400/10 to-purple-400/10 rounded-full blur-3xl animate-float"></div>
-              <div className="absolute bottom-4 left-4 w-24 h-24 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-2xl animate-float" style={{animationDelay: '1s'}}></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-teal-500/5 rounded-3xl"></div>
+              <div className="absolute top-4 right-4 w-32 h-32 bg-gradient-to-br from-emerald-400/10 to-teal-400/10 rounded-full blur-3xl animate-float"></div>
+              <div className="absolute bottom-4 left-4 w-24 h-24 bg-gradient-to-br from-teal-400/10 to-emerald-400/10 rounded-full blur-2xl animate-float" style={{animationDelay: '1s'}}></div>
               
               <div className="relative z-10">
                 {/* Window controls */}
@@ -248,14 +248,14 @@ PLAN:
                   <div className="bg-gray-800/70 border border-gray-600/50 rounded-2xl p-6 min-h-[140px] relative backdrop-blur-sm">
                     <div className="text-gray-100 leading-relaxed text-sm">
                       {demoText}
-                      {isTyping && <span className="bg-blue-400 text-blue-400 animate-pulse">|</span>}
+                      {isTyping && <span className="bg-emerald-400 text-emerald-400 animate-pulse">|</span>}
                     </div>
                     {/* Typing indicator */}
                     {isTyping && (
                       <div className="absolute bottom-3 right-3 flex items-center space-x-1">
-                        <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0s'}}></div>
-                        <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
-                        <div className="w-1 h-1 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
+                        <div className="w-1 h-1 bg-emerald-400 rounded-full animate-bounce" style={{animationDelay: '0s'}}></div>
+                        <div className="w-1 h-1 bg-emerald-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-1 h-1 bg-emerald-400 rounded-full animate-bounce" style={{animationDelay: '0.4s'}}></div>
                       </div>
                     )}
                   </div>
@@ -263,14 +263,14 @@ PLAN:
                 
                 {/* Demo Generate Button */}
                 <Button 
-                  className="w-full mb-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-2xl py-4 text-sm font-semibold transition-all duration-300 transform hover:scale-[1.02] shadow-lg shadow-blue-500/25"
+                  className="w-full mb-6 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl py-3 text-sm font-semibold transition-all duration-300 transform hover:scale-[1.01] shadow-lg shadow-emerald-500/25"
                   disabled={isTyping}
                 >
                   {isTyping ? (
                     <>
                       <div className="flex items-center justify-center">
                         <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
-                        AI Processing...
+                        Processing...
                       </div>
                     </>
                   ) : (
@@ -284,7 +284,7 @@ PLAN:
                 {/* Demo Output */}
                 {showDemoOutput && (
                   <div className="bg-gray-800/70 border border-gray-600/50 rounded-2xl overflow-hidden animate-fade-in backdrop-blur-sm">
-                    <div className="bg-gradient-to-r from-blue-600/10 to-purple-600/10 px-6 py-4 border-b border-gray-600/30">
+                    <div className="bg-gradient-to-r from-emerald-600/10 to-teal-600/10 px-6 py-4 border-b border-gray-600/30">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -306,20 +306,7 @@ PLAN:
               </div>
             </div>
             
-            {/* Enhanced Scroll Indicator */}
-            <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={scrollToInput}
-                className="text-gray-400 hover:text-white transition-all duration-300 animate-bounce hover:animate-none group"
-              >
-                <div className="flex flex-col items-center space-y-1">
-                  <ArrowDown className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                  <span className="text-xs opacity-75">Try it</span>
-                </div>
-              </Button>
-            </div>
+
           </div>
         </div>
       </section>
@@ -384,44 +371,35 @@ PLAN:
               </div>
 
               {/* Generate Button */}
-              <div className="mb-8 relative">
+              <div className="mb-6 relative">
                 <Button
                   onClick={handleGenerate}
                   disabled={generateMutation.isPending}
-                  className="w-full relative overflow-hidden bg-gradient-to-r from-slate-800 via-gray-800 to-slate-900 hover:from-slate-700 hover:via-gray-700 hover:to-slate-800 text-white font-bold py-8 px-8 rounded-2xl h-auto text-xl transition-all duration-500 transform hover:scale-[1.02] shadow-2xl shadow-black/40 hover:shadow-black/60 border border-slate-600/30"
+                  className="w-full relative overflow-hidden bg-gradient-to-r from-emerald-700 via-teal-700 to-emerald-800 hover:from-emerald-600 hover:via-teal-600 hover:to-emerald-700 text-white font-semibold py-5 px-6 rounded-xl h-auto text-lg transition-all duration-300 transform hover:scale-[1.01] shadow-xl shadow-emerald-900/40 hover:shadow-emerald-900/60 border border-emerald-600/40"
                 >
                   {/* Animated background gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-gray-400/10 rounded-2xl animate-shimmer"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-emerald-400/10 rounded-xl animate-shimmer"></div>
                   
                   {/* Button content */}
                   <div className="relative z-10 flex items-center justify-center">
                     {generateMutation.isPending ? (
                       <>
-                        <div className="relative">
-                          <div className="w-7 h-7 border-3 border-white/30 border-t-white rounded-full animate-spin mr-4"></div>
-                          <div className="absolute inset-0 w-7 h-7 border-3 border-transparent border-t-gray-300 rounded-full animate-spin" style={{animationDirection: 'reverse', animationDuration: '0.8s'}}></div>
+                        <div className="relative mr-3">
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                          <div className="absolute inset-0 w-5 h-5 border-2 border-transparent border-t-emerald-200 rounded-full animate-spin" style={{animationDirection: 'reverse', animationDuration: '0.8s'}}></div>
                         </div>
-                        <div className="flex flex-col items-start">
-                          <span className="text-lg font-bold">AI Processing...</span>
-                          <span className="text-sm text-gray-300 opacity-90">Analyzing clinical data</span>
-                        </div>
+                        <span className="font-semibold">Processing Clinical Data...</span>
                       </>
                     ) : (
                       <>
-                        <div className="mr-4 relative">
-                          <Sparkles className="w-7 h-7 animate-pulse" />
-                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full animate-ping"></div>
-                        </div>
-                        <div className="flex flex-col items-start">
-                          <span className="text-lg font-bold">Generate Professional SOAP Note</span>
-                          <span className="text-sm text-gray-300 opacity-90">Powered by Claude AI • Takes 3-5 seconds</span>
-                        </div>
+                        <Sparkles className="w-5 h-5 mr-3 animate-pulse" />
+                        <span className="font-semibold">Generate SOAP Note</span>
                       </>
                     )}
                   </div>
                   
                   {/* Glow effect */}
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-slate-600/0 via-white/5 to-slate-600/0 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-emerald-600/0 via-white/5 to-emerald-600/0 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                 </Button>
               </div>
 
@@ -450,10 +428,10 @@ PLAN:
                         </div>
                         <Button
                           onClick={handleCopy}
-                          className="bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white border border-gray-500/50 px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                          className="bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-600 hover:to-teal-600 text-white border border-emerald-600/40 px-5 py-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
                         >
                           <Copy className="w-4 h-4 mr-2" />
-                          Copy Report
+                          Copy
                         </Button>
                       </div>
                     </div>
@@ -469,26 +447,26 @@ PLAN:
                   </div>
 
                   {/* Enhanced Action Buttons */}
-                  <div className="mt-8 flex flex-col sm:flex-row gap-4">
+                  <div className="mt-6 flex flex-col sm:flex-row gap-3">
                     <Button
                       onClick={handleRegenerate}
                       disabled={generateMutation.isPending}
-                      className="flex-1 bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white border border-gray-600/50 py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg relative overflow-hidden"
+                      className="flex-1 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white border border-slate-600/40 py-3 px-5 rounded-xl transition-all duration-300 transform hover:scale-[1.01] shadow-lg relative overflow-hidden"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-emerald-600/10 to-teal-600/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="relative z-10 flex items-center justify-center">
-                        <Sparkles className="w-5 h-5 mr-2" />
-                        <span className="font-semibold">Regenerate with AI</span>
+                        <Sparkles className="w-4 h-4 mr-2" />
+                        <span className="font-medium">Regenerate</span>
                       </div>
                     </Button>
                     <Button
                       onClick={handleNewReport}
-                      className="flex-1 bg-gradient-to-r from-gray-800 to-gray-700 hover:from-gray-700 hover:to-gray-600 text-white border border-gray-600/50 py-4 px-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02] shadow-lg relative overflow-hidden"
+                      className="flex-1 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white border border-slate-600/40 py-3 px-5 rounded-xl transition-all duration-300 transform hover:scale-[1.01] shadow-lg relative overflow-hidden"
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-blue-600/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute inset-0 bg-gradient-to-r from-teal-600/10 to-emerald-600/10 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                       <div className="relative z-10 flex items-center justify-center">
-                        <FileText className="w-5 h-5 mr-2" />
-                        <span className="font-semibold">Create New Report</span>
+                        <FileText className="w-4 h-4 mr-2" />
+                        <span className="font-medium">New Report</span>
                       </div>
                     </Button>
                   </div>
