@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { GenerateReportRequest, GenerateReportResponse } from "@shared/schema";
 
 export default function Home() {
-  const [reportType, setReportType] = useState<string>("soap");
+  const [reportType, setReportType] = useState<"soap" | "progress" | "discharge">("soap");
   const [patientNotes, setPatientNotes] = useState<string>("");
   const [generatedReport, setGeneratedReport] = useState<string>("");
   const [showResults, setShowResults] = useState<boolean>(false);
@@ -400,7 +400,7 @@ Primary: Community-acquired pneumonia, resolved`
                     reportType === "soap" 
                       ? "Describe the patient case here. Include symptoms, vital signs, examination findings, medical history, and any other relevant clinical information. The AI will structure this into a professional SOAP note format."
                     : reportType === "progress"
-                      ? "Provide updates on the patient's condition since the last visit. Include current symptoms, response to treatment, vital signs, physical examination findings, and any changes in status."
+                      ? "Provide comprehensive patient information including: past medical history, current visit details, symptoms, vital signs, physical exam findings, and any changes since the last visit. The AI will compare current data with previous history to generate a detailed progress update."
                       : "Describe the patient's entire hospital stay. Include admission reason, treatments received, procedures performed, current condition, medications, and discharge planning information."
                   }
                   value={patientNotes}

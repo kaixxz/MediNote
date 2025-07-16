@@ -120,7 +120,8 @@ The application is designed to be easily deployable to platforms like Replit, wi
 
 ### July 16, 2025 - Progress Notes and Discharge Summary Implementation
 - Added complete Progress Notes functionality with specialized AI prompts
-- Implemented Discharge Summary generation with comprehensive hospital documentation
+- Implemented custom user-provided Progress Notes prompt for enhanced clinical documentation
+- Implemented Discharge Summary generation with comprehensive hospital documentation  
 - Updated schema validation to support all three report types: soap, progress, discharge
 - Enhanced AI service with specific prompts for each medical document type
 - Added dynamic placeholder text that changes based on selected report type
