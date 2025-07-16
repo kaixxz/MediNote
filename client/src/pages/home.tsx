@@ -228,7 +228,7 @@ Primary: Community-acquired pneumonia, resolved`
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400 tracking-tight">Noto</h1>
+            <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400 tracking-tight">Medinote</h1>
             <div className="hidden md:flex items-center space-x-8 text-gray-300">
               <button onClick={() => smoothScrollTo('features')} className="hover:text-white transition-all duration-300 hover:scale-105">Features</button>
               <button onClick={() => smoothScrollTo('use-cases')} className="hover:text-white transition-all duration-300 hover:scale-105">Use Cases</button>
@@ -375,7 +375,7 @@ Primary: Community-acquired pneumonia, resolved`
                 <Label htmlFor="reportType" className="text-lg font-medium text-gray-200 mb-4 block">
                   Report Type
                 </Label>
-                <Select value={reportType} onValueChange={setReportType}>
+                <Select value={reportType} onValueChange={(value) => setReportType(value as "soap" | "progress" | "discharge")}>
                   <SelectTrigger className="w-full bg-gray-800 border-gray-600 rounded-xl hover:bg-gray-700 text-white h-12 text-lg transition-all duration-200">
                     <SelectValue />
                   </SelectTrigger>
@@ -567,7 +567,7 @@ Primary: Community-acquired pneumonia, resolved`
               Built for Every Healthcare Setting
             </h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto animate-slide-up" style={{animationDelay: '0.2s'}}>
-              From emergency departments to private practice, Noto adapts to your workflow
+              From emergency departments to private practice, Medinote adapts to your workflow
             </p>
           </div>
 
