@@ -118,7 +118,16 @@ The application is designed to be easily deployable to platforms like Replit, wi
 
 ## Recent Changes
 
-### July 16, 2025 - Major UI/UX Redesign
+### July 16, 2025 - Progress Notes and Discharge Summary Implementation
+- Added complete Progress Notes functionality with specialized AI prompts
+- Implemented Discharge Summary generation with comprehensive hospital documentation
+- Updated schema validation to support all three report types: soap, progress, discharge
+- Enhanced AI service with specific prompts for each medical document type
+- Added dynamic placeholder text that changes based on selected report type
+- Unified API endpoint to handle all medical report generation
+- Removed "Coming Soon" labels - all report types now fully functional
+
+### July 16, 2025 - Major UI/UX Redesign  
 - Completely redesigned home page to feel like a premium SaaS product
 - Added full-screen hero section with gradient backgrounds and large typography
 - Implemented animated typing demo that shows live SOAP note generation
@@ -127,4 +136,5 @@ The application is designed to be easily deployable to platforms like Replit, wi
 - Improved mobile responsiveness and animations
 - Added floating elements and interactive hover effects
 - Restructured page layout: Hero → Input Section → Features → Footer
-- Used modern color scheme with gray-900/950 backgrounds and blue/purple accents
+- Unified emerald/teal color scheme throughout for medical branding
+- Fixed demo SOAP note formatting with proper line breaks and structure

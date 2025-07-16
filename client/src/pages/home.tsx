@@ -21,10 +21,11 @@ export default function Home() {
   const { toast } = useToast();
   const inputSectionRef = useRef<HTMLDivElement>(null);
 
-  // Demo typing effect
-  const demoInputText = "Patient presents with acute chest pain radiating to left arm, onset 2 hours ago. Diaphoretic, anxious. History of hypertension, smoking. Vital signs: BP 160/95, HR 102, O2 sat 98%. ECG shows ST elevation in leads II, III, aVF.";
-  
-  const demoOutputText = `SUBJECTIVE:
+  // Demo typing effect - examples for different report types
+  const demoExamples = {
+    soap: {
+      input: "Patient presents with acute chest pain radiating to left arm, onset 2 hours ago. Diaphoretic, anxious. History of hypertension, smoking. Vital signs: BP 160/95, HR 102, O2 sat 98%. ECG shows ST elevation in leads II, III, aVF.",
+      output: `SUBJECTIVE:
 Patient reports acute chest pain with radiation to the left arm, onset approximately 2 hours prior to presentation. Associated symptoms include diaphoresis and anxiety. Past medical history significant for hypertension and smoking.
 
 OBJECTIVE:
@@ -41,7 +42,60 @@ PLAN:
 3. Heparin per protocol
 4. Serial cardiac enzymes and ECGs
 5. Continuous cardiac monitoring
-6. NPO pending procedure`;
+6. NPO pending procedure`
+    },
+    progress: {
+      input: "Follow-up visit for diabetes management. Patient reports improved glucose control with current medications. Recent HbA1c 7.2%. No hypoglycemic episodes. Blood pressure stable. Eye exam scheduled next month.",
+      output: `PATIENT STATUS:
+66-year-old patient with Type 2 diabetes mellitus returning for routine follow-up. Patient reports feeling well with improved energy levels.
+
+INTERVAL HISTORY:
+Patient reports good adherence to metformin and glipizide regimen. Home glucose monitoring shows readings consistently 120-160 mg/dL. No episodes of hypoglycemia or hyperglycemia. Diet compliance good, regular exercise 3x weekly.
+
+ASSESSMENT:
+Type 2 diabetes mellitus - well controlled
+Recent HbA1c 7.2% (improved from 8.1% three months ago)
+Blood pressure stable at 128/82 mmHg
+
+PLAN:
+1. Continue current medications: metformin 1000mg BID, glipizide 5mg daily
+2. Ophthalmology referral scheduled for diabetic retinal screening
+3. Annual nephrology consultation recommended
+4. Continue current lifestyle modifications
+5. Follow-up in 3 months with repeat HbA1c
+6. Patient counseled on hypoglycemia recognition`
+    },
+    discharge: {
+      input: "72-year-old admitted for pneumonia, treated with antibiotics. Improved clinically, afebrile x48hrs. Discharge home with oral antibiotics. Follow-up with primary care in 1 week.",
+      output: `ADMISSION INFORMATION:
+Date of Admission: [Date]
+Chief Complaint: Shortness of breath and productive cough
+Admitting Diagnosis: Community-acquired pneumonia
+
+HOSPITAL COURSE:
+72-year-old patient admitted with 5-day history of productive cough, fever, and dyspnea. Chest X-ray revealed right lower lobe consolidation. Treated with IV ceftriaxone and azithromycin with marked clinical improvement. Patient became afebrile after 48 hours and oxygen requirements resolved.
+
+DISCHARGE CONDITION:
+Stable, afebrile, ambulating independently, oxygen saturation 96% on room air
+
+DISCHARGE MEDICATIONS:
+1. Amoxicillin-clavulanate 875mg PO BID x 5 days
+2. Resume home medications as previously prescribed
+
+FOLLOW-UP INSTRUCTIONS:
+1. Primary care physician appointment in 1 week
+2. Repeat chest X-ray in 4-6 weeks if symptoms persist
+3. Return to ED if fever, worsening shortness of breath, or chest pain
+4. Complete full course of antibiotics
+
+DISCHARGE DIAGNOSIS:
+Primary: Community-acquired pneumonia, resolved`
+    }
+  };
+  
+  const currentDemo = demoExamples.soap; // Default to SOAP for demo
+  const demoInputText = currentDemo.input;
+  const demoOutputText = currentDemo.output;
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -327,12 +381,8 @@ PLAN:
                   </SelectTrigger>
                   <SelectContent className="bg-gray-800 border-gray-600">
                     <SelectItem value="soap">SOAP Note</SelectItem>
-                    <SelectItem value="progress" disabled>
-                      Progress Note (Coming Soon)
-                    </SelectItem>
-                    <SelectItem value="discharge" disabled>
-                      Discharge Summary (Coming Soon)
-                    </SelectItem>
+                    <SelectItem value="progress">Progress Note</SelectItem>
+                    <SelectItem value="discharge">Discharge Summary</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -346,7 +396,13 @@ PLAN:
                   id="patientNotes"
                   rows={10}
                   className="w-full bg-gray-800 border-gray-600 rounded-xl hover:bg-gray-700 focus:bg-gray-700 text-white placeholder-gray-400 resize-none text-lg leading-relaxed transition-all duration-200"
-                  placeholder="Describe the patient case here. Include symptoms, vital signs, examination findings, medical history, and any other relevant clinical information. The AI will structure this into a professional SOAP note format."
+                  placeholder={
+                    reportType === "soap" 
+                      ? "Describe the patient case here. Include symptoms, vital signs, examination findings, medical history, and any other relevant clinical information. The AI will structure this into a professional SOAP note format."
+                    : reportType === "progress"
+                      ? "Provide updates on the patient's condition since the last visit. Include current symptoms, response to treatment, vital signs, physical examination findings, and any changes in status."
+                      : "Describe the patient's entire hospital stay. Include admission reason, treatments received, procedures performed, current condition, medications, and discharge planning information."
+                  }
                   value={patientNotes}
                   onChange={(e) => setPatientNotes(e.target.value)}
                   maxLength={2000}
