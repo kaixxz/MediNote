@@ -204,6 +204,10 @@
   animation: shimmer 2s infinite;
 }
 
+.border-3 {
+  border-width: 3px;
+}
+
 /* Custom dark theme utilities */
 .bg-dark-900 {
   background-color: var(--dark-900);
