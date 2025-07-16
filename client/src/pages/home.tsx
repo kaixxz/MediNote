@@ -587,7 +587,7 @@ PLAN:
               <Button className="w-full bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">Get Started</Button>
             </div>
 
-            <div className="bg-gradient-to-b from-emerald-900/20 to-teal-900/20 border-2 border-emerald-500/50 rounded-2xl p-8 relative">
+            <div className="bg-gradient-to-b from-emerald-900/20 to-teal-900/20 border-2 border-emerald-500/50 rounded-2xl p-8 relative hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-4 py-1 rounded-full text-sm">
                 Most Popular
               </div>
