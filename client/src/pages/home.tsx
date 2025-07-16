@@ -174,7 +174,7 @@ PLAN:
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-white">Noto</h1>
+            <h1 className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400 tracking-tight">Noto</h1>
             <div className="hidden md:flex items-center space-x-8 text-gray-300">
               <button onClick={() => smoothScrollTo('features')} className="hover:text-white transition-all duration-300 hover:scale-105">Features</button>
               <button onClick={() => smoothScrollTo('use-cases')} className="hover:text-white transition-all duration-300 hover:scale-105">Use Cases</button>
@@ -196,7 +196,7 @@ PLAN:
                 AI-powered medical reports
               </span>
               <br />
-              <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-emerald-400 to-teal-500 bg-clip-text text-transparent">
                 in seconds
               </span>
             </h1>
@@ -209,18 +209,9 @@ PLAN:
               <Button 
                 onClick={scrollToInput}
                 size="lg"
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0 px-8 py-4 text-lg rounded-2xl h-auto transition-all duration-300 transform hover:scale-105"
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white border-0 px-8 py-4 text-lg rounded-2xl h-auto transition-all duration-300 transform hover:scale-105 shadow-lg shadow-emerald-500/25 animate-pulse-glow"
               >
-                <Play className="w-5 h-5 mr-2" />
                 Try It Now
-              </Button>
-              <Button 
-                variant="outline"
-                size="lg"
-                className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white px-8 py-4 text-lg rounded-2xl h-auto transition-all duration-300"
-              >
-                <FileText className="w-5 h-5 mr-2" />
-                View Demo
               </Button>
             </div>
           </div>
@@ -275,8 +266,7 @@ PLAN:
                     </>
                   ) : (
                     <>
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      Generate SOAP Note
+                      Generate
                     </>
                   )}
                 </Button>
@@ -392,8 +382,7 @@ PLAN:
                       </>
                     ) : (
                       <>
-                        <Sparkles className="w-5 h-5 mr-3 animate-pulse" />
-                        <span className="font-semibold">Generate SOAP Note</span>
+                        <span className="font-semibold">Generate</span>
                       </>
                     )}
                   </div>
@@ -490,21 +479,21 @@ PLAN:
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8 text-center hover:bg-gray-800/50 transition-all duration-300">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8 text-center hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20 animate-fade-in">
               <h3 className="text-xl font-semibold text-white mb-4">Clinically Accurate</h3>
               <p className="text-gray-400 leading-relaxed">
                 AI trained on medical literature ensures consistent, professional documentation that meets clinical standards.
               </p>
             </div>
 
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8 text-center hover:bg-gray-800/50 transition-all duration-300">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8 text-center hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20 animate-fade-in" style={{animationDelay: '0.2s'}}>
               <h3 className="text-xl font-semibold text-white mb-4">Lightning Fast</h3>
               <p className="text-gray-400 leading-relaxed">
                 Transform unstructured notes into professional SOAP reports in under 5 seconds. Focus on patients, not paperwork.
               </p>
             </div>
 
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8 text-center hover:bg-gray-800/50 transition-all duration-300">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8 text-center hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20 animate-fade-in" style={{animationDelay: '0.4s'}}>
               <h3 className="text-xl font-semibold text-white mb-4">HIPAA Compliant</h3>
               <p className="text-gray-400 leading-relaxed">
                 Enterprise-grade security ensures patient data privacy and regulatory compliance at every step.
@@ -526,7 +515,7 @@ PLAN:
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">
             <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6">
               <h3 className="text-lg font-semibold text-white mb-3">Emergency Medicine</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
@@ -595,7 +584,7 @@ PLAN:
                 <li>• Email support</li>
                 <li>• Basic templates</li>
               </ul>
-              <Button className="w-full bg-gray-700 hover:bg-gray-600 text-white rounded-xl">Get Started</Button>
+              <Button className="w-full bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">Get Started</Button>
             </div>
 
             <div className="bg-gradient-to-b from-blue-900/20 to-purple-900/20 border-2 border-blue-500/50 rounded-2xl p-8 relative">
@@ -612,7 +601,7 @@ PLAN:
                 <li>• Custom templates</li>
                 <li>• EMR integration</li>
               </ul>
-              <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl">Start Free Trial</Button>
+              <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">Start Free Trial</Button>
             </div>
 
             <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-8">
@@ -626,7 +615,7 @@ PLAN:
                 <li>• On-premise deployment</li>
                 <li>• Training & onboarding</li>
               </ul>
-              <Button className="w-full bg-gray-700 hover:bg-gray-600 text-white rounded-xl">Contact Sales</Button>
+              <Button className="w-full bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-600 hover:to-teal-600 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">Contact Sales</Button>
             </div>
           </div>
         </div>
@@ -686,7 +675,7 @@ PLAN:
                   <span>Ongoing training programs</span>
                 </div>
               </div>
-              <Button className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl">
+              <Button className="w-full mt-6 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg">
                 Schedule Demo
               </Button>
             </div>
@@ -699,10 +688,7 @@ PLAN:
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="text-center space-y-8">
             <div className="flex items-center justify-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <FileText className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-white">Noto</h3>
+              <h3 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-400 tracking-tight">Noto</h3>
             </div>
             
             <p className="text-gray-400 text-lg max-w-2xl mx-auto">
