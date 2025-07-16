@@ -516,42 +516,42 @@ PLAN:
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 animate-fade-in">
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6 hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20">
               <h3 className="text-lg font-semibold text-white mb-3">Emergency Medicine</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Rapid documentation for high-volume patient encounters. Generate comprehensive SOAP notes in seconds during critical situations.
               </p>
             </div>
 
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6 hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20">
               <h3 className="text-lg font-semibold text-white mb-3">Primary Care</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Streamline routine visits and follow-ups. Consistent documentation for patient continuity and quality care.
               </p>
             </div>
 
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6 hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20">
               <h3 className="text-lg font-semibold text-white mb-3">Specialty Practice</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Specialized templates for cardiology, neurology, psychiatry, and other specialties. Tailored to clinical workflows.
               </p>
             </div>
 
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6 hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20">
               <h3 className="text-lg font-semibold text-white mb-3">Telemedicine</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Perfect for virtual consultations. Generate professional documentation for remote patient encounters.
               </p>
             </div>
 
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6 hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20">
               <h3 className="text-lg font-semibold text-white mb-3">Hospital Systems</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Enterprise integration with existing EMR systems. Scalable solution for large healthcare organizations.
               </p>
             </div>
 
-            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6">
+            <div className="bg-gray-900/30 border border-gray-700 rounded-2xl p-6 hover:bg-gray-800/50 transition-all duration-500 transform hover:scale-105 hover:shadow-xl hover:shadow-emerald-900/20">
               <h3 className="text-lg font-semibold text-white mb-3">Urgent Care</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
                 Fast-paced environment support. Efficient documentation for walk-in patients and minor emergencies.
