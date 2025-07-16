@@ -18,22 +18,43 @@ const anthropic = new Anthropic({
 
 export async function generateSOAPNote(patientNotes: string): Promise<string> {
   try {
-    const prompt = `You are a medical documentation assistant. Convert the following free-form patient notes into a structured SOAP note format.
+    const systemPrompt = `You are a clinical documentation assistant for doctors. Your task is to generate concise, professional SOAP notes based on patient information provided. SOAP notes are a method of documentation employed by healthcare providers to write out notes in a patient's chart.
 
-Please organize the information into these four sections:
-- SUBJECTIVE: Patient's reported symptoms, complaints, and history
-- OBJECTIVE: Observable findings, vital signs, physical examination results
-- ASSESSMENT: Clinical assessment, diagnosis, or differential diagnosis
-- PLAN: Treatment plan, follow-up actions, recommendations
+Follow these guidelines to create a SOAP note:
 
-Patient Notes:
-${patientNotes}
+1. Subjective (S): Patient's chief complaint, symptoms, and relevant history as reported by the patient.
+2. Objective (O): Measurable findings, observations, vital signs, and physical examination results.
+3. Assessment (A): Clinical interpretation, diagnosis, or differential diagnosis based on subjective and objective findings.
+4. Plan (P): Treatment plan, medications, follow-up instructions, and next steps.
 
-Generate a professional SOAP note with clear section headers and well-organized information. If any section lacks information from the provided notes, make reasonable clinical inferences but clearly indicate when information is limited or requires further assessment.`;
+Format Requirements:
+- Use clear section headers: SUBJECTIVE, OBJECTIVE, ASSESSMENT, PLAN
+- Write in professional medical terminology
+- Be concise but comprehensive
+- Include relevant medical history when provided
+- If information is missing for a section, note "Information not provided" rather than making assumptions
+- Ensure clinical accuracy and professional presentation
+
+Generate a well-structured SOAP note that would be appropriate for a medical record.`;
 
     const response = await anthropic.messages.create({
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 20000,
+      temperature: 1,
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: systemPrompt
+            },
+            {
+              type: 'text',
+              text: `Patient Information:\n${patientNotes}`
+            }
+          ]
+        }
+      ],
       // "claude-sonnet-4-20250514"
       model: DEFAULT_MODEL_STR,
     });
