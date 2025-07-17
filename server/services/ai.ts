@@ -16,6 +16,170 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY,
 });
 
+export async function generateSoapSection(
+  section: "subjective" | "objective" | "assessment" | "plan", 
+  content: string, 
+  patientInfo?: any
+): Promise<string> {
+  try {
+    let systemPrompt = "";
+    
+    if (section === "subjective") {
+      systemPrompt = `You are a clinical documentation assistant. Generate a professional SUBJECTIVE section for a SOAP note based on the provided information.
+
+The SUBJECTIVE section should include:
+- Chief complaint (why the patient came in)
+- History of present illness (details about current symptoms)
+- Relevant past medical history
+- Current medications if relevant
+- Social history if relevant (smoking, alcohol, etc.)
+- Review of systems if provided
+
+Format the response as a clear, professional medical documentation suitable for a patient chart. Use proper medical terminology and present information in a logical flow. Do not include section headers or formatting - just the content.`;
+      
+    } else if (section === "objective") {
+      systemPrompt = `You are a clinical documentation assistant. Generate a professional OBJECTIVE section for a SOAP note based on the provided information.
+
+The OBJECTIVE section should include:
+- Vital signs (temperature, blood pressure, heart rate, respiratory rate, oxygen saturation)
+- Physical examination findings organized by system
+- Laboratory results if provided
+- Diagnostic test results (X-rays, ECG, etc.) if provided
+- General appearance and mental status
+
+Format the response as clear, professional medical documentation. Use proper medical terminology and organize findings logically. Do not include section headers or formatting - just the content.`;
+      
+    } else if (section === "assessment") {
+      systemPrompt = `You are a clinical documentation assistant. Generate a professional ASSESSMENT section for a SOAP note based on the provided subjective and objective information.
+
+The ASSESSMENT section should include:
+- Primary diagnosis or most likely diagnosis
+- Differential diagnoses if relevant
+- Clinical reasoning based on the subjective and objective findings
+- Severity assessment
+- Risk factors or complications if relevant
+
+Format the response as clear, professional medical documentation. Use proper medical terminology and provide logical clinical reasoning. Do not include section headers or formatting - just the content.`;
+      
+    } else if (section === "plan") {
+      systemPrompt = `You are a clinical documentation assistant. Generate a professional PLAN section for a SOAP note based on the provided assessment and clinical information.
+
+The PLAN section should include:
+- Immediate treatment interventions
+- Medications with dosages and frequencies
+- Diagnostic tests or procedures to be ordered
+- Follow-up care instructions
+- Patient education topics
+- When to return or seek further care
+- Referrals if needed
+
+Format the response as a numbered or organized list. Use proper medical terminology and provide specific, actionable steps. Do not include section headers or formatting - just the content.`;
+    }
+
+    // Add patient context if available
+    let contextualPrompt = systemPrompt;
+    if (patientInfo) {
+      const { age, gender, medicalHistory, symptoms, affectedSystem } = patientInfo;
+      let context = "\n\nPatient Context:\n";
+      if (age) context += `Age: ${age}\n`;
+      if (gender) context += `Gender: ${gender}\n`;
+      if (medicalHistory) context += `Medical History: ${medicalHistory}\n`;
+      if (symptoms?.length) context += `Symptoms: ${symptoms.join(", ")}\n`;
+      if (affectedSystem) context += `Affected System: ${affectedSystem}\n`;
+      contextualPrompt += context;
+    }
+
+    const response = await anthropic.messages.create({
+      max_tokens: 1500,
+      temperature: 0.3,
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: contextualPrompt
+            },
+            {
+              type: 'text',
+              text: `Input for ${section.toUpperCase()} section:\n${content}`
+            }
+          ]
+        }
+      ],
+      model: DEFAULT_MODEL_STR,
+    });
+
+    const textContent = response.content.find(content => content.type === 'text');
+    if (!textContent) {
+      throw new Error('No text content in AI response');
+    }
+
+    return textContent.text.trim();
+  } catch (error) {
+    console.error(`Error generating ${section} section:`, error);
+    throw new Error(`Failed to generate ${section} section. Please try again.`);
+  }
+}
+
+export async function reviewSoapReport(subjective: string, objective: string, assessment: string, plan: string): Promise<any> {
+  try {
+    const systemPrompt = `You are a senior physician reviewing a SOAP note for quality and completeness. Analyze each section and provide specific feedback.
+
+For each section, identify:
+1. Vague language that should be more specific
+2. Missing clinical reasoning or details
+3. Suggestions for stronger clinical phrasing
+4. Areas that need more information
+
+Return your analysis as a JSON object with this structure:
+{
+  "suggestions": [
+    {
+      "section": "subjective|objective|assessment|plan",
+      "issues": ["list of identified issues"],
+      "suggestions": ["list of specific improvements"]
+    }
+  ]
+}
+
+Focus on clinical accuracy, completeness, and professional documentation standards.`;
+
+    const fullReport = `SUBJECTIVE:\n${subjective}\n\nOBJECTIVE:\n${objective}\n\nASSESSMENT:\n${assessment}\n\nPLAN:\n${plan}`;
+
+    const response = await anthropic.messages.create({
+      max_tokens: 2000,
+      temperature: 0.1,
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: systemPrompt
+            },
+            {
+              type: 'text',
+              text: `SOAP Note to Review:\n${fullReport}`
+            }
+          ]
+        }
+      ],
+      model: DEFAULT_MODEL_STR,
+    });
+
+    const textContent = response.content.find(content => content.type === 'text');
+    if (!textContent) {
+      throw new Error('No text content in AI response');
+    }
+
+    return JSON.parse(textContent.text);
+  } catch (error) {
+    console.error('Error reviewing SOAP report:', error);
+    throw new Error('Failed to review SOAP report. Please try again.');
+  }
+}
+
 export async function generateMedicalReport(patientNotes: string, reportType: "soap" | "progress" | "discharge"): Promise<string> {
   try {
     let systemPrompt = "";
