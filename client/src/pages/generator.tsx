@@ -22,25 +22,38 @@ export default function Generator() {
               </div>
             </Link>
             
-            <div className="flex items-center space-x-4">
-              {/* Report Type Selector */}
-              <Select value={reportType} onValueChange={(value: "soap" | "progress" | "discharge") => setReportType(value)}>
-                <SelectTrigger className="w-48 bg-gray-800 border-gray-600 text-white">
-                  <SelectValue placeholder="Select report type" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-600">
-                  <SelectItem value="soap" className="text-white hover:bg-gray-700">SOAP Notes</SelectItem>
-                  <SelectItem value="progress" className="text-white hover:bg-gray-700">Progress Notes</SelectItem>
-                  <SelectItem value="discharge" className="text-white hover:bg-gray-700">Discharge Summary</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <Link href="/">
-                <Button variant="outline" className="flex items-center space-x-2 border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">
-                  <ArrowLeft className="w-4 h-4" />
-                  <span>Back to Home</span>
-                </Button>
-              </Link>
+            {/* Enhanced Report Type Tabs */}
+            <div className="flex items-center bg-gray-800/50 backdrop-blur-sm rounded-2xl p-2 border border-gray-700/50">
+              <button
+                onClick={() => setReportType("soap")}
+                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 ${
+                  reportType === "soap"
+                    ? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-900/50"
+                    : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                }`}
+              >
+                SOAP Notes
+              </button>
+              <button
+                onClick={() => setReportType("progress")}
+                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 ${
+                  reportType === "progress"
+                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-900/50"
+                    : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                }`}
+              >
+                Progress Notes
+              </button>
+              <button
+                onClick={() => setReportType("discharge")}
+                className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 ${
+                  reportType === "discharge"
+                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-900/50"
+                    : "text-gray-300 hover:text-white hover:bg-gray-700/50"
+                }`}
+              >
+                Discharge Summary
+              </button>
             </div>
           </div>
         </div>

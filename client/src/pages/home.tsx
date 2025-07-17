@@ -8,11 +8,15 @@ export default function Home() {
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [demoText, setDemoText] = useState<string>("");
   const [showDemoOutput, setShowDemoOutput] = useState<boolean>(false);
+  const [currentDemoIndex, setCurrentDemoIndex] = useState<number>(0);
 
-  // Demo SOAP note example
-  const demoExample = {
-    input: "Patient presents with acute chest pain radiating to left arm, onset 2 hours ago. Diaphoretic, anxious. History of hypertension, smoking. Vital signs: BP 160/95, HR 102, O2 sat 98%. ECG shows ST elevation in leads II, III, aVF.",
-    output: `SUBJECTIVE:
+  // Demo examples for all three document types
+  const demoExamples = [
+    {
+      type: "SOAP Note",
+      color: "emerald",
+      input: "Patient presents with acute chest pain radiating to left arm, onset 2 hours ago. Diaphoretic, anxious. History of hypertension, smoking. Vital signs: BP 160/95, HR 102, O2 sat 98%. ECG shows ST elevation in leads II, III, aVF.",
+      output: `SUBJECTIVE:
 Patient reports acute chest pain with radiation to the left arm, onset approximately 2 hours prior to presentation. Associated symptoms include diaphoresis and anxiety. Past medical history significant for hypertension and smoking.
 
 OBJECTIVE:
@@ -30,7 +34,67 @@ PLAN:
 4. Serial cardiac enzymes and ECGs
 5. Continuous cardiac monitoring
 6. NPO pending procedure`
-  };
+    },
+    {
+      type: "Progress Note",
+      color: "blue",
+      input: "Patient Day 3 post-operative coronary artery bypass surgery. Patient reports mild incisional pain 4/10. Ambulating with assistance. Chest tubes removed yesterday. Diet advanced to regular.",
+      output: `PROGRESS NOTE - Post-Op Day 3
+
+CURRENT STATUS:
+Patient is 3 days post-operative following coronary artery bypass surgery. Overall condition stable with expected recovery trajectory.
+
+SUBJECTIVE:
+Patient reports mild incisional pain rated 4/10, well-controlled with current pain management. Tolerating regular diet without nausea or vomiting. Sleep quality improved from previous day.
+
+OBJECTIVE:
+- Vital Signs: Stable, afebrile
+- Cardiac: Regular rate and rhythm, no murmurs
+- Pulmonary: Clear to auscultation bilaterally, chest tubes discontinued
+- Incision: Clean, dry, intact with no signs of infection
+- Mobility: Ambulating with assistance, good effort
+
+ASSESSMENT & PLAN:
+1. Post-operative recovery proceeding as expected
+2. Continue current pain management regimen
+3. Advance activity as tolerated with physical therapy
+4. Monitor for signs of complications
+5. Target discharge in 2-3 days if progress continues`
+    },
+    {
+      type: "Discharge Summary",
+      color: "purple",
+      input: "72-year-old male admitted for acute myocardial infarction. Underwent emergency cardiac catheterization with stent placement. Hospital course uncomplicated. Patient stable for discharge home.",
+      output: `DISCHARGE SUMMARY
+
+PATIENT: 72-year-old male
+ADMISSION DATE: [Date]
+DISCHARGE DATE: [Date]
+LENGTH OF STAY: 4 days
+
+PRINCIPAL DIAGNOSIS: Acute ST-elevation myocardial infarction
+
+PROCEDURES PERFORMED:
+- Emergency cardiac catheterization
+- Percutaneous coronary intervention with drug-eluting stent placement to RCA
+
+HOSPITAL COURSE:
+Patient presented with acute chest pain and was found to have STEMI. Emergency cardiac catheterization revealed 99% occlusion of the right coronary artery, successfully treated with stent placement. Recovery was uncomplicated.
+
+DISCHARGE MEDICATIONS:
+1. Aspirin 81mg daily
+2. Clopidogrel 75mg daily
+3. Atorvastatin 80mg daily
+4. Metoprolol 25mg twice daily
+
+FOLLOW-UP:
+- Cardiology in 1 week
+- Primary care in 2 weeks
+- Cardiac rehabilitation enrollment
+
+DISCHARGE CONDITION: Stable`
+    }
+  ];
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -40,11 +104,13 @@ PLAN:
       setDemoText("");
       setShowDemoOutput(false);
       
+      const currentDemo = demoExamples[currentDemoIndex];
+      
       // Typing effect
       let currentIndex = 0;
       const typeText = () => {
-        if (currentIndex < demoExample.input.length) {
-          setDemoText(demoExample.input.slice(0, currentIndex + 1));
+        if (currentIndex < currentDemo.input.length) {
+          setDemoText(currentDemo.input.slice(0, currentIndex + 1));
           currentIndex++;
           timeout = setTimeout(typeText, 30);
         } else {
@@ -62,14 +128,17 @@ PLAN:
     // Start first demo immediately
     startDemo();
     
-    // Restart demo every 15 seconds
-    const interval = setInterval(startDemo, 15000);
+    // Restart demo every 15 seconds and cycle through examples
+    const interval = setInterval(() => {
+      setCurrentDemoIndex((prev) => (prev + 1) % demoExamples.length);
+      startDemo();
+    }, 15000);
     
     return () => {
       clearTimeout(timeout);
       clearInterval(interval);
     };
-  }, []);
+  }, [currentDemoIndex]);
 
   return (
     <div className="min-h-screen overflow-hidden bg-gradient-to-br from-slate-950 via-gray-950 to-emerald-950">
@@ -153,15 +222,27 @@ PLAN:
             <div className="relative animate-slide-up">
               <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/40 backdrop-blur-xl border border-gray-600/30 rounded-3xl overflow-hidden shadow-2xl">
                 {/* Demo Header */}
-                <div className="bg-gradient-to-r from-emerald-600/20 to-teal-600/20 border-b border-gray-600/30 p-6">
+                <div className={`bg-gradient-to-r ${
+                  demoExamples[currentDemoIndex].color === 'emerald' ? 'from-emerald-600/20 to-teal-600/20' :
+                  demoExamples[currentDemoIndex].color === 'blue' ? 'from-blue-600/20 to-indigo-600/20' :
+                  'from-purple-600/20 to-pink-600/20'
+                } border-b border-gray-600/30 p-6`}>
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center">
+                    <div className={`w-12 h-12 bg-gradient-to-br ${
+                      demoExamples[currentDemoIndex].color === 'emerald' ? 'from-emerald-500 to-teal-600' :
+                      demoExamples[currentDemoIndex].color === 'blue' ? 'from-blue-500 to-indigo-600' :
+                      'from-purple-500 to-pink-600'
+                    } rounded-2xl flex items-center justify-center`}>
                       <FileText className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-white">Live SOAP Generation</h3>
+                      <h3 className="text-lg font-semibold text-white">Live {demoExamples[currentDemoIndex].type} Generation</h3>
                       <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                        <div className={`w-2 h-2 ${
+                          demoExamples[currentDemoIndex].color === 'emerald' ? 'bg-emerald-400' :
+                          demoExamples[currentDemoIndex].color === 'blue' ? 'bg-blue-400' :
+                          'bg-purple-400'
+                        } rounded-full animate-pulse`}></div>
                         <span className="text-sm text-gray-300">Real-time AI processing</span>
                       </div>
                     </div>
@@ -200,12 +281,16 @@ PLAN:
                   {showDemoOutput && (
                     <div className="animate-fade-in">
                       <div className="flex items-center space-x-2 mb-3">
-                        <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
-                        <span className="text-sm font-medium text-gray-300">Generated SOAP Note</span>
+                        <div className={`w-2 h-2 ${
+                          demoExamples[currentDemoIndex].color === 'emerald' ? 'bg-emerald-400' :
+                          demoExamples[currentDemoIndex].color === 'blue' ? 'bg-blue-400' :
+                          'bg-purple-400'
+                        } rounded-full`}></div>
+                        <span className="text-sm font-medium text-gray-300">Generated {demoExamples[currentDemoIndex].type}</span>
                       </div>
                       <div className="bg-gray-800/50 border border-gray-600/50 rounded-xl p-4 max-h-80 overflow-y-auto">
                         <div className="text-gray-200 text-sm leading-relaxed font-mono whitespace-pre-wrap">
-                          {demoExample.output}
+                          {demoExamples[currentDemoIndex].output}
                         </div>
                       </div>
                     </div>

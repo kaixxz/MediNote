@@ -54,32 +54,91 @@ interface SoapSection {
   description: string;
 }
 
-const soapSections: SoapSection[] = [
-  {
-    title: "Subjective",
-    key: "subjective",
-    placeholder: "Patient's chief complaint, symptoms, and history as reported by the patient...",
-    description: "What the patient tells you"
-  },
-  {
-    title: "Objective", 
-    key: "objective",
-    placeholder: "Vital signs, physical examination findings, laboratory results...",
-    description: "What you observe and measure"
-  },
-  {
-    title: "Assessment",
-    key: "assessment", 
-    placeholder: "Clinical interpretation, diagnosis, differential diagnosis...",
-    description: "Your clinical judgment"
-  },
-  {
-    title: "Plan",
-    key: "plan",
-    placeholder: "Treatment plan, medications, follow-up instructions...",
-    description: "What you will do"
+const getSectionsForReportType = (reportType: "soap" | "progress" | "discharge"): SoapSection[] => {
+  switch (reportType) {
+    case "progress":
+      return [
+        {
+          title: "Current Status",
+          key: "subjective",
+          placeholder: "Patient's current condition, treatment day, overall progress...",
+          description: "Current patient status and progress"
+        },
+        {
+          title: "Subjective",
+          key: "objective",
+          placeholder: "Patient's reported symptoms, pain levels, concerns...",
+          description: "What the patient reports"
+        },
+        {
+          title: "Objective",
+          key: "assessment",
+          placeholder: "Vital signs, physical exam findings, test results...",
+          description: "Observable findings"
+        },
+        {
+          title: "Assessment & Plan",
+          key: "plan",
+          placeholder: "Clinical assessment and treatment plan moving forward...",
+          description: "Clinical judgment and next steps"
+        }
+      ];
+    case "discharge":
+      return [
+        {
+          title: "Hospital Course",
+          key: "subjective",
+          placeholder: "Summary of hospital stay, procedures performed, complications...",
+          description: "Summary of hospitalization"
+        },
+        {
+          title: "Discharge Condition",
+          key: "objective",
+          placeholder: "Patient's condition at discharge, vital signs, functional status...",
+          description: "Condition at discharge"
+        },
+        {
+          title: "Discharge Instructions",
+          key: "assessment",
+          placeholder: "Medications, activity restrictions, diet instructions...",
+          description: "Patient instructions"
+        },
+        {
+          title: "Follow-up",
+          key: "plan",
+          placeholder: "Appointment schedule, monitoring requirements, contact information...",
+          description: "Follow-up care plan"
+        }
+      ];
+    default: // soap
+      return [
+        {
+          title: "Subjective",
+          key: "subjective",
+          placeholder: "Patient's chief complaint, symptoms, and history as reported by the patient...",
+          description: "What the patient tells you"
+        },
+        {
+          title: "Objective",
+          key: "objective",
+          placeholder: "Vital signs, physical examination findings, laboratory results...",
+          description: "What you observe and measure"
+        },
+        {
+          title: "Assessment",
+          key: "assessment",
+          placeholder: "Clinical interpretation, diagnosis, differential diagnosis...",
+          description: "Your clinical judgment"
+        },
+        {
+          title: "Plan",
+          key: "plan",
+          placeholder: "Treatment plan, medications, follow-up instructions...",
+          description: "What you will do"
+        }
+      ];
   }
-];
+};
 
 const commonSymptoms = [
   "Fever", "Headache", "Nausea", "Vomiting", "Diarrhea", "Constipation",
@@ -303,15 +362,30 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
   };
 
   const config = getReportConfig();
+  const sections = getSectionsForReportType(reportType);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-white mb-2">{getReportConfig().title}</h1>
-            <p className="text-gray-400">{getReportConfig().description}</p>
-          </div>
+    <div className="container mx-auto px-4 py-8 relative">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className={`absolute top-10 left-10 w-72 h-72 ${
+          config.color === 'emerald' ? 'bg-emerald-500/5' :
+          config.color === 'blue' ? 'bg-blue-500/5' :
+          'bg-purple-500/5'
+        } rounded-full mix-blend-multiply filter blur-3xl animate-float`}></div>
+        <div className={`absolute top-32 right-20 w-96 h-96 ${
+          config.color === 'emerald' ? 'bg-teal-500/5' :
+          config.color === 'blue' ? 'bg-indigo-500/5' :
+          'bg-pink-500/5'
+        } rounded-full mix-blend-multiply filter blur-3xl animate-float`} style={{animationDelay: '2s'}}></div>
+      </div>
+
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8 relative z-10">
+        <div className="animate-slide-in-left">
+          <h1 className="text-3xl font-bold text-white mb-2">{config.title}</h1>
+          <p className="text-gray-400">{config.description}</p>
+        </div>
           
           <div className="flex items-center gap-4 mt-4 lg:mt-0">
             <Input 
@@ -478,36 +552,38 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
           </div>
         </div>
 
-        {/* SOAP Sections */}
-        <div className="space-y-6">
-          {soapSections.map((section) => {
+        {/* Report Sections */}
+        <div className="space-y-6 relative z-10">
+          {sections.map((section) => {
             const isExpanded = expandedSections.includes(section.key);
             const isCompleted = completedSections.includes(section.key);
             const isGenerating = generateSectionMutation.isPending && 
               generateSectionMutation.variables?.section === section.key;
             
             return (
-              <Card key={section.key} className="transition-all duration-200 hover:shadow-md">
+              <Card key={section.key} className={`transition-all duration-300 hover:shadow-2xl hover:shadow-${config.color}-900/20 border-l-4 ${
+                isCompleted ? `border-l-${config.color}-500` : 'border-l-gray-600'
+              } transform hover:scale-[1.02] bg-gradient-to-r from-gray-900/80 to-gray-800/60 backdrop-blur-sm`}>
                 <CardHeader 
-                  className="cursor-pointer"
+                  className="cursor-pointer group"
                   onClick={() => toggleSection(section.key)}
                 >
                   <CardTitle className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       {isExpanded ? (
-                        <ChevronDown className="w-5 h-5 text-gray-500" />
+                        <ChevronDown className={`w-5 h-5 text-${config.color}-400 transition-transform duration-300 group-hover:scale-110`} />
                       ) : (
-                        <ChevronRight className="w-5 h-5 text-gray-500" />
+                        <ChevronRight className={`w-5 h-5 text-${config.color}-400 transition-transform duration-300 group-hover:scale-110`} />
                       )}
-                      <span>{section.title}</span>
+                      <span className="group-hover:text-white transition-colors duration-300">{section.title}</span>
                       {isCompleted && (
-                        <CheckCircle className="w-5 h-5 text-emerald-600" />
+                        <CheckCircle className={`w-5 h-5 text-${config.color}-500 animate-pulse`} />
                       )}
                       {!isCompleted && (
                         <Clock className="w-5 h-5 text-gray-400" />
                       )}
                     </div>
-                    <p className="text-sm text-gray-500 font-normal">
+                    <p className="text-sm text-gray-500 font-normal group-hover:text-gray-300 transition-colors duration-300">
                       {section.description}
                     </p>
                   </CardTitle>
@@ -534,14 +610,15 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                       <Button
                         onClick={() => handleGenerateSection(section.key)}
                         disabled={isGenerating || !sectionContent[section.key].trim()}
-                        className={`bg-gradient-to-r ${config.gradientFrom} ${config.gradientTo} hover:opacity-90 text-white shadow-lg`}
+                        className={`bg-gradient-to-r ${config.gradientFrom} ${config.gradientTo} hover:from-emerald-500 hover:to-teal-500 text-white shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-500 transform hover:scale-105 border border-emerald-500/30 relative overflow-hidden group`}
                       >
                         {isGenerating ? (
                           <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         ) : (
                           <Sparkles className="w-4 h-4 mr-2" />
                         )}
-                        Generate with AI
+                        <span className="relative z-10">Generate with AI</span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
                       </Button>
                     </div>
                   </CardContent>
