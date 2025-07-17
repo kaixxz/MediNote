@@ -80,8 +80,24 @@ PLAN:
         <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-cyan-500/10 rounded-full mix-blend-multiply filter blur-3xl animate-float" style={{animationDelay: '4s'}}></div>
       </div>
 
+      {/* Navigation */}
+      <nav className="relative z-20 p-6">
+        <div className="max-w-7xl mx-auto">
+          <Link href="/">
+            <div className="flex items-center space-x-3 cursor-pointer group">
+              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
+                <FileText className="w-6 h-6 text-white" />
+              </div>
+              <span className="text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors duration-200">
+                Medinote
+              </span>
+            </div>
+          </Link>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <section className="relative z-10 flex items-center min-h-screen px-6 lg:px-8">
+      <section className="relative z-10 flex items-center min-h-[80vh] px-6 lg:px-8">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Content */}
@@ -95,24 +111,40 @@ PLAN:
                 <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
                   Build Professional
                   <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent block">
-                    SOAP Notes
+                    Medical Reports
                   </span>
                   with AI
                 </h1>
                 
                 <p className="text-xl lg:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                  Transform your clinical documentation with intelligent, structured workflows that save hours while maintaining the highest standards of medical reporting.
+                  Create SOAP notes, progress reports, and discharge summaries with intelligent, structured workflows that save hours while maintaining the highest standards of medical documentation.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
+              <div className="grid sm:grid-cols-3 gap-4 justify-center lg:justify-start mb-12">
                 <Link href="/soap">
-                  <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-300 transform hover:scale-105 border border-emerald-500/30">
-                    Start Building SOAP Notes
-                    <ArrowRight className="w-5 h-5 ml-2" />
+                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-4 text-lg font-semibold rounded-xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-300 transform hover:scale-105 border border-emerald-500/30">
+                    <FileText className="w-5 h-5 mr-2" />
+                    SOAP Notes
                   </Button>
                 </Link>
                 
+                <Link href="/progress">
+                  <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-6 py-4 text-lg font-semibold rounded-xl shadow-2xl shadow-blue-900/50 hover:shadow-blue-900/70 transition-all duration-300 transform hover:scale-105 border border-blue-500/30">
+                    <Clock className="w-5 h-5 mr-2" />
+                    Progress Notes
+                  </Button>
+                </Link>
+                
+                <Link href="/discharge">
+                  <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-4 text-lg font-semibold rounded-xl shadow-2xl shadow-purple-900/50 hover:shadow-purple-900/70 transition-all duration-300 transform hover:scale-105 border border-purple-500/30">
+                    <CheckCircle className="w-5 h-5 mr-2" />
+                    Discharge Summary
+                  </Button>
+                </Link>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
                 <Button 
                   variant="outline" 
                   onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
@@ -267,12 +299,38 @@ PLAN:
 
           {/* CTA Section */}
           <div className="text-center mt-16">
-            <Link href="/soap">
-              <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-12 py-4 text-lg font-semibold rounded-xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-300 transform hover:scale-105 border border-emerald-500/30">
-                Start Building Professional SOAP Notes
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-            </Link>
+            <h3 className="text-2xl font-bold text-white mb-8">Choose Your Report Type</h3>
+            <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
+              <Link href="/soap">
+                <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-300 transform hover:scale-105 border border-emerald-500/30">
+                  <FileText className="w-6 h-6 mr-3" />
+                  <div className="text-left">
+                    <div className="font-bold">SOAP Notes</div>
+                    <div className="text-sm opacity-90">Structured clinical documentation</div>
+                  </div>
+                </Button>
+              </Link>
+              
+              <Link href="/progress">
+                <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-2xl shadow-blue-900/50 hover:shadow-blue-900/70 transition-all duration-300 transform hover:scale-105 border border-blue-500/30">
+                  <Clock className="w-6 h-6 mr-3" />
+                  <div className="text-left">
+                    <div className="font-bold">Progress Notes</div>
+                    <div className="text-sm opacity-90">Patient follow-up documentation</div>
+                  </div>
+                </Button>
+              </Link>
+              
+              <Link href="/discharge">
+                <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-2xl shadow-purple-900/50 hover:shadow-purple-900/70 transition-all duration-300 transform hover:scale-105 border border-purple-500/30">
+                  <CheckCircle className="w-6 h-6 mr-3" />
+                  <div className="text-left">
+                    <div className="font-bold">Discharge Summary</div>
+                    <div className="text-sm opacity-90">Hospital discharge documentation</div>
+                  </div>
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>

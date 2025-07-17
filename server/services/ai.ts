@@ -19,13 +19,38 @@ const anthropic = new Anthropic({
 export async function generateSoapSection(
   section: "subjective" | "objective" | "assessment" | "plan", 
   content: string, 
-  patientInfo?: any
+  patientInfo?: any,
+  reportType: "soap" | "progress" | "discharge" = "soap"
 ): Promise<string> {
   try {
     let systemPrompt = "";
     
     if (section === "subjective") {
-      systemPrompt = `You are a clinical documentation assistant. Generate a professional SUBJECTIVE section for a SOAP note based on the provided information.
+      if (reportType === "progress") {
+        systemPrompt = `You are a clinical documentation assistant. Generate a professional SUBJECTIVE section for a progress note based on the provided information.
+
+The SUBJECTIVE section for progress notes should include:
+- Patient's current complaints and symptoms since last visit
+- Changes in condition or symptoms
+- Response to current treatments
+- Medication compliance and side effects
+- Patient's functional status and quality of life
+- Any new concerns or symptoms
+
+Format the response as clear, professional medical documentation. Use proper medical terminology and focus on changes and progression since the last encounter. Do not include section headers or formatting - just the content.`;
+      } else if (reportType === "discharge") {
+        systemPrompt = `You are a clinical documentation assistant. Generate a professional HISTORY OF PRESENT ILLNESS section for a discharge summary based on the provided information.
+
+This section should include:
+- Reason for admission and chief complaint
+- Chronological description of the illness/condition leading to hospitalization
+- Relevant past medical history
+- Hospital course summary
+- Response to treatments during admission
+
+Format the response as clear, professional medical documentation. Use proper medical terminology and provide a comprehensive overview of the patient's hospital stay. Do not include section headers or formatting - just the content.`;
+      } else {
+        systemPrompt = `You are a clinical documentation assistant. Generate a professional SUBJECTIVE section for a SOAP note based on the provided information.
 
 The SUBJECTIVE section should include:
 - Chief complaint (why the patient came in)
@@ -36,6 +61,7 @@ The SUBJECTIVE section should include:
 - Review of systems if provided
 
 Format the response as a clear, professional medical documentation suitable for a patient chart. Use proper medical terminology and present information in a logical flow. Do not include section headers or formatting - just the content.`;
+      }
       
     } else if (section === "objective") {
       systemPrompt = `You are a clinical documentation assistant. Generate a professional OBJECTIVE section for a SOAP note based on the provided information.

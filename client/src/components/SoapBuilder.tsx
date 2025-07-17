@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "wouter";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { 
   Loader2, 
   Sparkles, 
@@ -21,7 +23,12 @@ import {
   AlertTriangle,
   ChevronDown,
   ChevronRight,
-  Settings
+  Settings,
+  Home,
+  ArrowLeft,
+  RefreshCw,
+  Eye,
+  Star
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -81,7 +88,11 @@ const affectedSystems = [
   "Hematological", "Psychiatric", "Ophthalmological", "ENT"
 ];
 
-export default function SoapBuilder() {
+interface SoapBuilderProps {
+  reportType?: "soap" | "progress" | "discharge";
+}
+
+export default function SoapBuilder({ reportType = "soap" }: SoapBuilderProps) {
   const [currentDraft, setCurrentDraft] = useState<SoapDraft | null>(null);
   const [patientInfo, setPatientInfo] = useState<PatientInfo>({});
   const [sectionContent, setSectionContent] = useState({
@@ -94,7 +105,8 @@ export default function SoapBuilder() {
   const [expandedSections, setExpandedSections] = useState<string[]>(["subjective"]);
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [showReview, setShowReview] = useState(false);
-  const [draftTitle, setDraftTitle] = useState("New SOAP Note");
+  const [reviewData, setReviewData] = useState<any>(null);
+  const [draftTitle, setDraftTitle] = useState(`New ${reportType.toUpperCase()} Note`);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -110,7 +122,7 @@ export default function SoapBuilder() {
     mutationFn: async ({ section, content, patientInfo: info }: GenerateSectionRequest): Promise<GenerateSectionResponse> => {
       return apiRequest("/api/generate-section", {
         method: "POST",
-        body: { section, content, patientInfo: info }
+        body: { section, content, patientInfo: info, reportType }
       });
     },
     onSuccess: (data, variables) => {
@@ -141,11 +153,19 @@ export default function SoapBuilder() {
         body: data
       });
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setReviewData(data);
       setShowReview(true);
       toast({
         title: "Review Complete",
         description: "AI suggestions are ready for review."
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Review Failed",
+        description: error instanceof Error ? error.message : "Failed to review report",
+        variant: "destructive"
       });
     }
   });
@@ -249,14 +269,73 @@ export default function SoapBuilder() {
     );
   };
 
+  const getReportConfig = () => {
+    switch (reportType) {
+      case "progress":
+        return {
+          title: "Progress Note Builder",
+          description: "Create detailed patient progress documentation with AI assistance",
+          color: "blue",
+          gradientFrom: "from-blue-600",
+          gradientTo: "to-indigo-600",
+          bgGradient: "from-blue-50 via-white to-indigo-50"
+        };
+      case "discharge":
+        return {
+          title: "Discharge Summary Builder", 
+          description: "Generate comprehensive hospital discharge documentation",
+          color: "purple",
+          gradientFrom: "from-purple-600",
+          gradientTo: "to-pink-600",
+          bgGradient: "from-purple-50 via-white to-pink-50"
+        };
+      default:
+        return {
+          title: "SOAP Note Builder",
+          description: "Create structured medical documentation with AI assistance", 
+          color: "emerald",
+          gradientFrom: "from-emerald-600",
+          gradientTo: "to-teal-600",
+          bgGradient: "from-emerald-50 via-white to-teal-50"
+        };
+    }
+  };
+
+  const config = getReportConfig();
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50">
+    <div className={`min-h-screen bg-gradient-to-br ${config.bgGradient}`}>
+      {/* Navigation */}
+      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/">
+              <div className="flex items-center space-x-3 cursor-pointer group">
+                <div className={`w-10 h-10 bg-gradient-to-br ${config.gradientFrom} ${config.gradientTo} rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}>
+                  <FileText className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors duration-200">
+                  Medinote
+                </span>
+              </div>
+            </Link>
+            
+            <Link href="/">
+              <Button variant="outline" className="flex items-center space-x-2">
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Home</span>
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </nav>
+
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">SOAP Note Builder</h1>
-            <p className="text-gray-600">Create structured medical documentation with AI assistance</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{config.title}</h1>
+            <p className="text-gray-600">{config.description}</p>
           </div>
           
           <div className="flex items-center gap-4 mt-4 lg:mt-0">
@@ -480,7 +559,7 @@ export default function SoapBuilder() {
                       <Button
                         onClick={() => handleGenerateSection(section.key)}
                         disabled={isGenerating || !sectionContent[section.key].trim()}
-                        className="bg-emerald-600 hover:bg-emerald-700"
+                        className={`bg-gradient-to-r ${config.gradientFrom} ${config.gradientTo} hover:opacity-90 text-white shadow-lg`}
                       >
                         {isGenerating ? (
                           <Loader2 className="w-4 h-4 animate-spin mr-2" />
@@ -497,16 +576,86 @@ export default function SoapBuilder() {
           })}
         </div>
 
+        {/* AI Review Modal */}
+        <Dialog open={showReview} onOpenChange={setShowReview}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Star className="w-5 h-5 text-yellow-500" />
+                AI Review & Suggestions
+              </DialogTitle>
+              <DialogDescription>
+                Our AI has analyzed your {reportType.toUpperCase()} note and provided suggestions for improvement.
+              </DialogDescription>
+            </DialogHeader>
+            
+            {reviewData && (
+              <div className="space-y-6">
+                {reviewData.suggestions?.map((suggestion: any, index: number) => (
+                  <Card key={index} className="border-l-4 border-l-amber-500">
+                    <CardHeader>
+                      <CardTitle className="text-lg capitalize">
+                        {suggestion.section} Section
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {suggestion.issues.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-red-700 mb-2">Issues Identified:</h4>
+                          <ul className="list-disc list-inside space-y-1 text-sm text-red-600">
+                            {suggestion.issues.map((issue: string, i: number) => (
+                              <li key={i}>{issue}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      
+                      {suggestion.suggestions.length > 0 && (
+                        <div>
+                          <h4 className="font-semibold text-green-700 mb-2">Suggestions:</h4>
+                          <ul className="list-disc list-inside space-y-1 text-sm text-green-600">
+                            {suggestion.suggestions.map((sug: string, i: number) => (
+                              <li key={i}>{sug}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+                
+                <div className="flex justify-end gap-3 pt-4">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setShowReview(false)}
+                  >
+                    Close
+                  </Button>
+                  <Button 
+                    onClick={() => {
+                      setShowReview(false);
+                      // Could trigger a regeneration based on suggestions
+                    }}
+                    className={`bg-gradient-to-r ${config.gradientFrom} ${config.gradientTo}`}
+                  >
+                    Apply Suggestions
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
         {/* Review Section */}
         {completedSections.length === 4 && (
-          <Card className="mt-8 border-emerald-200 bg-emerald-50">
+          <Card className={`mt-8 border-${config.color}-200 bg-${config.color}-50`}>
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold text-emerald-900 mb-2">
-                    SOAP Note Complete!
+                  <h3 className={`font-semibold text-${config.color}-900 mb-2`}>
+                    {config.title.split(' ')[0]} Note Complete!
                   </h3>
-                  <p className="text-emerald-700">
+                  <p className={`text-${config.color}-700`}>
                     All sections are completed. Generate AI suggestions to improve your documentation.
                   </p>
                 </div>
@@ -515,14 +664,14 @@ export default function SoapBuilder() {
                   onClick={handleReviewReport}
                   disabled={reviewReportMutation.isPending}
                   variant="outline"
-                  className="border-emerald-300 text-emerald-700 hover:bg-emerald-100"
+                  className={`border-${config.color}-300 text-${config.color}-700 hover:bg-${config.color}-100`}
                 >
                   {reviewReportMutation.isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
                   ) : (
-                    <AlertTriangle className="w-4 h-4 mr-2" />
+                    <Eye className="w-4 h-4 mr-2" />
                   )}
-                  Review & Improve
+                  AI Review & Suggestions
                 </Button>
               </div>
             </CardContent>

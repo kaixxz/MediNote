@@ -22,9 +22,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Generate SOAP section endpoint
   app.post("/api/generate-section", async (req, res) => {
     try {
-      const { section, content, patientInfo } = generateSectionSchema.parse(req.body);
+      const { section, content, patientInfo, reportType } = req.body;
       
-      const generatedContent = await generateSoapSection(section, content, patientInfo);
+      const generatedContent = await generateSoapSection(section, content, patientInfo, reportType || "soap");
       
       res.json({ content: generatedContent });
     } catch (error) {
