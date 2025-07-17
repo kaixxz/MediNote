@@ -7,6 +7,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+interface SoapBuilderProps {
+  reportType?: "soap" | "progress" | "discharge";
+  setReportType?: (type: "soap" | "progress" | "discharge") => void;
+}
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -88,11 +93,7 @@ const affectedSystems = [
   "Hematological", "Psychiatric", "Ophthalmological", "ENT"
 ];
 
-interface SoapBuilderProps {
-  reportType?: "soap" | "progress" | "discharge";
-}
-
-export default function SoapBuilder({ reportType = "soap" }: SoapBuilderProps) {
+export default function SoapBuilder({ reportType = "soap", setReportType }: SoapBuilderProps) {
   const [currentDraft, setCurrentDraft] = useState<SoapDraft | null>(null);
   const [patientInfo, setPatientInfo] = useState<PatientInfo>({});
   const [sectionContent, setSectionContent] = useState({
@@ -304,35 +305,12 @@ export default function SoapBuilder({ reportType = "soap" }: SoapBuilderProps) {
   const config = getReportConfig();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-950 to-emerald-950">
-      {/* Navigation */}
-      <nav className="bg-gray-900/80 backdrop-blur-md border-b border-gray-800/50 sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/">
-              <div className="cursor-pointer group">
-                <span className="text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors duration-200">
-                  Medinote
-                </span>
-              </div>
-            </Link>
-            
-            <Link href="/">
-              <Button variant="outline" className="flex items-center space-x-2 border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">
-                <ArrowLeft className="w-4 h-4" />
-                <span>Back to Home</span>
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
-
-      <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white mb-2">{config.title}</h1>
-            <p className="text-gray-400">{config.description}</p>
+            <h1 className="text-3xl font-bold text-white mb-2">{getReportConfig().title}</h1>
+            <p className="text-gray-400">{getReportConfig().description}</p>
           </div>
           
           <div className="flex items-center gap-4 mt-4 lg:mt-0">
@@ -675,6 +653,5 @@ export default function SoapBuilder({ reportType = "soap" }: SoapBuilderProps) {
           </Card>
         )}
       </div>
-    </div>
   );
 }

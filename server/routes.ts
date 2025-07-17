@@ -79,6 +79,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put("/api/drafts/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const draftData = saveDraftSchema.parse(req.body);
+      
+      const draft = await storage.updateSoapDraft(parseInt(id), draftData);
+      
+      res.json(draft);
+    } catch (error) {
+      console.error("Error updating draft:", error);
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to fetch drafts" 
+      });
+    }
+  });
+
   app.get("/api/drafts/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);

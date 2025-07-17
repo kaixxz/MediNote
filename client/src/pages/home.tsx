@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, Sparkles, FileText, Clock, CheckCircle, Zap, Shield, ChevronRight } from "lucide-react";
+import { ArrowRight, Sparkles, FileText, Clock, CheckCircle, Zap, Shield, ChevronRight, User } from "lucide-react";
 
 export default function Home() {
   const [isTyping, setIsTyping] = useState<boolean>(false);
@@ -115,7 +115,19 @@ PLAN:
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-16">
                 <Link href="/soap">
-                  <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-12 py-4 text-xl font-semibold rounded-2xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-500 transform hover:scale-105 border border-emerald-500/30 relative overflow-hidden group">
+                  <Button 
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-12 py-4 text-xl font-semibold rounded-2xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-500 transform hover:scale-105 border border-emerald-500/30 relative overflow-hidden group"
+                    onClick={() => {
+                      // Add page transition animation
+                      document.body.style.transform = 'translateY(20px)';
+                      document.body.style.opacity = '0.8';
+                      document.body.style.transition = 'all 0.3s ease-out';
+                      setTimeout(() => {
+                        document.body.style.transform = 'translateY(0)';
+                        document.body.style.opacity = '1';
+                      }, 100);
+                    }}
+                  >
                     <span className="relative z-10 flex items-center">
                       Try Medinote Now
                       <ArrowRight className="w-6 h-6 ml-3 transition-transform group-hover:translate-x-1" />
@@ -242,9 +254,24 @@ PLAN:
                 <Card className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 border-gray-600/30 backdrop-blur-lg">
                   <CardContent className="p-8">
                     <div className="space-y-4">
-                      <div className="h-4 bg-gray-700 rounded animate-shimmer"></div>
-                      <div className="h-4 bg-gray-700 rounded w-3/4 animate-shimmer" style={{animationDelay: '0.2s'}}></div>
-                      <div className="h-4 bg-gray-700 rounded w-1/2 animate-shimmer" style={{animationDelay: '0.4s'}}></div>
+                      <div className="flex items-center space-x-3 mb-4">
+                        <User className="w-5 h-5 text-emerald-400" />
+                        <span className="text-white font-medium">Patient Information</span>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="flex justify-between">
+                          <span className="text-gray-400 text-sm">Name:</span>
+                          <span className="text-white text-sm">John Smith</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400 text-sm">Age:</span>
+                          <span className="text-white text-sm">45</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-gray-400 text-sm">Chief Complaint:</span>
+                          <span className="text-white text-sm">Chest pain</span>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -271,12 +298,17 @@ PLAN:
                   <CardContent className="p-8">
                     <div className="flex items-center mb-4">
                       <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse mr-3"></div>
-                      <span className="text-emerald-400 text-sm">Generating...</span>
+                      <span className="text-emerald-400 text-sm">Generating SOAP Note...</span>
                     </div>
                     <div className="space-y-3">
-                      <div className="h-3 bg-gradient-to-r from-emerald-500/20 to-transparent rounded animate-shimmer"></div>
-                      <div className="h-3 bg-gradient-to-r from-emerald-500/20 to-transparent rounded w-4/5 animate-shimmer" style={{animationDelay: '0.3s'}}></div>
-                      <div className="h-3 bg-gradient-to-r from-emerald-500/20 to-transparent rounded w-3/5 animate-shimmer" style={{animationDelay: '0.6s'}}></div>
+                      <div className="text-gray-300 text-sm">
+                        <strong>Subjective:</strong> Patient presents with...
+                      </div>
+                      <div className="h-2 bg-gradient-to-r from-emerald-500/30 to-gray-700 rounded animate-shimmer"></div>
+                      <div className="text-gray-300 text-sm">
+                        <strong>Objective:</strong> Vital signs stable...
+                      </div>
+                      <div className="h-2 bg-gradient-to-r from-emerald-500/30 to-gray-700 rounded w-4/5 animate-shimmer" style={{animationDelay: '0.3s'}}></div>
                     </div>
                   </CardContent>
                 </Card>
@@ -321,19 +353,12 @@ PLAN:
       {/* Footer */}
       <footer className="relative z-10 py-12 px-6 lg:px-8 border-t border-gray-800">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-3 gap-8">
             <div>
               <span className="text-xl font-bold text-white">Medinote</span>
               <p className="text-gray-400 mt-4">The future of medical documentation</p>
             </div>
-            <div>
-              <h4 className="text-white font-semibold mb-4">Product</h4>
-              <div className="space-y-2 text-gray-400">
-                <div>SOAP Notes</div>
-                <div>Progress Notes</div>
-                <div>Discharge Summaries</div>
-              </div>
-            </div>
+
             <div>
               <h4 className="text-white font-semibold mb-4">Company</h4>
               <div className="space-y-2 text-gray-400">

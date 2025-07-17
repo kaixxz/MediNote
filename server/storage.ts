@@ -135,4 +135,59 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
+    return user;
+  }
+
+  async createReport(insertReport: InsertReport): Promise<Report> {
+    const [report] = await db.insert(reports).values(insertReport).returning();
+    return report;
+  }
+
+  async getReports(): Promise<Report[]> {
+    return await db.select().from(reports).orderBy(reports.createdAt);
+  }
+
+  async createSoapDraft(insertDraft: InsertSoapDraft): Promise<SoapDraft> {
+    const [draft] = await db.insert(soapDrafts).values(insertDraft).returning();
+    return draft;
+  }
+
+  async updateSoapDraft(id: number, updateData: Partial<InsertSoapDraft>): Promise<SoapDraft> {
+    const [draft] = await db.update(soapDrafts)
+      .set(updateData)
+      .where(eq(soapDrafts.id, id))
+      .returning();
+    return draft;
+  }
+
+  async getSoapDraft(id: number): Promise<SoapDraft | undefined> {
+    const [draft] = await db.select().from(soapDrafts).where(eq(soapDrafts.id, id));
+    return draft || undefined;
+  }
+
+  async getSoapDrafts(): Promise<SoapDraft[]> {
+    return await db.select().from(soapDrafts).orderBy(soapDrafts.updatedAt);
+  }
+
+  async deleteSoapDraft(id: number): Promise<void> {
+    await db.delete(soapDrafts).where(eq(soapDrafts.id, id));
+  }
+}
+
+export const storage = new DatabaseStorage();

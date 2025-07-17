@@ -31,6 +31,8 @@ export const soapDrafts = pgTable("soap_drafts", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+
+
 // Keep existing reports table for backward compatibility
 export const reports = pgTable("reports", {
   id: serial("id").primaryKey(),
