@@ -304,24 +304,21 @@ export default function SoapBuilder({ reportType = "soap" }: SoapBuilderProps) {
   const config = getReportConfig();
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${config.bgGradient}`}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-950 to-emerald-950">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200/50 sticky top-0 z-50">
+      <nav className="bg-gray-900/80 backdrop-blur-md border-b border-gray-800/50 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/">
-              <div className="flex items-center space-x-3 cursor-pointer group">
-                <div className={`w-10 h-10 bg-gradient-to-br ${config.gradientFrom} ${config.gradientTo} rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200`}>
-                  <FileText className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-2xl font-bold text-gray-900 group-hover:text-emerald-600 transition-colors duration-200">
+              <div className="cursor-pointer group">
+                <span className="text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors duration-200">
                   Medinote
                 </span>
               </div>
             </Link>
             
             <Link href="/">
-              <Button variant="outline" className="flex items-center space-x-2">
+              <Button variant="outline" className="flex items-center space-x-2 border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back to Home</span>
               </Button>
@@ -334,8 +331,8 @@ export default function SoapBuilder({ reportType = "soap" }: SoapBuilderProps) {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{config.title}</h1>
-            <p className="text-gray-600">{config.description}</p>
+            <h1 className="text-3xl font-bold text-white mb-2">{config.title}</h1>
+            <p className="text-gray-400">{config.description}</p>
           </div>
           
           <div className="flex items-center gap-4 mt-4 lg:mt-0">

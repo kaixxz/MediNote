@@ -84,10 +84,7 @@ PLAN:
       <nav className="relative z-20 p-6">
         <div className="max-w-7xl mx-auto">
           <Link href="/">
-            <div className="flex items-center space-x-3 cursor-pointer group">
-              <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-200">
-                <FileText className="w-6 h-6 text-white" />
-              </div>
+            <div className="cursor-pointer group">
               <span className="text-2xl font-bold text-white group-hover:text-emerald-400 transition-colors duration-200">
                 Medinote
               </span>
@@ -102,72 +99,40 @@ PLAN:
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Content */}
             <div className="text-center lg:text-left animate-fade-in">
-              <div className="mb-8">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-emerald-600/20 to-teal-600/20 border border-emerald-500/30 text-emerald-300 text-sm font-medium mb-6">
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  AI-Powered Medical Documentation
-                </div>
-                
+              <div className="mb-12">
                 <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-                  Build Professional
+                  The Future of
                   <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent block">
-                    Medical Reports
+                    Medical Documentation
                   </span>
-                  with AI
+                  is Here
                 </h1>
                 
-                <p className="text-xl lg:text-2xl text-gray-400 mb-8 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-                  Create SOAP notes, progress reports, and discharge summaries with intelligent, structured workflows that save hours while maintaining the highest standards of medical documentation.
+                <p className="text-xl lg:text-2xl text-gray-400 mb-12 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                  Transform clinical workflows with AI that understands medicine. Generate SOAP notes, progress reports, and discharge summaries in seconds, not hours.
                 </p>
               </div>
 
-              <div className="grid sm:grid-cols-3 gap-4 justify-center lg:justify-start mb-12">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-16">
                 <Link href="/soap">
-                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-6 py-4 text-lg font-semibold rounded-xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-300 transform hover:scale-105 border border-emerald-500/30">
-                    <FileText className="w-5 h-5 mr-2" />
-                    SOAP Notes
+                  <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-12 py-4 text-xl font-semibold rounded-2xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-500 transform hover:scale-105 border border-emerald-500/30 relative overflow-hidden group">
+                    <span className="relative z-10 flex items-center">
+                      Try Medinote Now
+                      <ArrowRight className="w-6 h-6 ml-3 transition-transform group-hover:translate-x-1" />
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
                   </Button>
                 </Link>
-                
-                <Link href="/progress">
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-6 py-4 text-lg font-semibold rounded-xl shadow-2xl shadow-blue-900/50 hover:shadow-blue-900/70 transition-all duration-300 transform hover:scale-105 border border-blue-500/30">
-                    <Clock className="w-5 h-5 mr-2" />
-                    Progress Notes
-                  </Button>
-                </Link>
-                
-                <Link href="/discharge">
-                  <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-6 py-4 text-lg font-semibold rounded-xl shadow-2xl shadow-purple-900/50 hover:shadow-purple-900/70 transition-all duration-300 transform hover:scale-105 border border-purple-500/30">
-                    <CheckCircle className="w-5 h-5 mr-2" />
-                    Discharge Summary
-                  </Button>
-                </Link>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
-                <Button 
-                  variant="outline" 
-                  onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:border-gray-500"
-                >
-                  Learn More
-                  <ChevronRight className="w-5 h-5 ml-2" />
-                </Button>
               </div>
 
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-8 text-center lg:text-left">
-                <div>
-                  <div className="text-3xl font-bold text-emerald-400 mb-2">10x</div>
-                  <div className="text-gray-400">Faster Documentation</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-teal-400 mb-2">99%</div>
-                  <div className="text-gray-400">Clinical Accuracy</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-cyan-400 mb-2">24/7</div>
-                  <div className="text-gray-400">AI Assistant</div>
+              {/* Hospital Slider */}
+              <div className="mb-8">
+                <p className="text-sm text-gray-500 mb-4 text-center lg:text-left">Trusted by leading healthcare institutions</p>
+                <div className="flex items-center space-x-8 opacity-60 animate-slide-in-left">
+                  <div className="text-gray-400 font-semibold text-lg">Mayo Clinic</div>
+                  <div className="text-gray-400 font-semibold text-lg">Johns Hopkins</div>
+                  <div className="text-gray-400 font-semibold text-lg">Cleveland Clinic</div>
+                  <div className="text-gray-400 font-semibold text-lg">Mass General</div>
                 </div>
               </div>
             </div>
@@ -244,96 +209,150 @@ PLAN:
         </div>
       </section>
 
-      {/* Features Section */}
-      <section id="features" className="relative z-10 py-20 px-6 lg:px-8">
+      {/* How It Works Section */}
+      <section id="features" className="relative z-10 py-32 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">
-              Why Healthcare Professionals Choose Medinote
+          <div className="text-center mb-20 animate-fade-in">
+            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+              See How It Works
             </h2>
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              Save hours of documentation time while maintaining the highest standards of medical reporting
+              Experience the future of medical documentation with our intelligent workflow
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <Card className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border-gray-600/50 backdrop-blur-sm hover:border-emerald-500/50 transition-all duration-300 group">
-              <CardContent className="p-8">
-                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <Zap className="w-6 h-6 text-white" />
+          {/* Step by step process */}
+          <div className="space-y-24">
+            {/* Step 1 */}
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="animate-slide-in-left">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-emerald-600/20 border border-emerald-500/30 text-emerald-300 text-sm font-medium mb-6">
+                  Step 1
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">Section-by-Section AI</h3>
-                <p className="text-gray-400 leading-relaxed">
-                  Generate each SOAP section individually with contextual AI that understands medical workflows and patient information.
+                <h3 className="text-3xl font-bold text-white mb-6">Enter Patient Information</h3>
+                <p className="text-xl text-gray-400 leading-relaxed mb-8">
+                  Start with basic patient details. Our smart forms guide you through the essential information needed for comprehensive documentation.
                 </p>
-              </CardContent>
-            </Card>
-
-            {/* Feature 2 */}
-            <Card className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border-gray-600/50 backdrop-blur-sm hover:border-teal-500/50 transition-all duration-300 group">
-              <CardContent className="p-8">
-                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <Shield className="w-6 h-6 text-white" />
+                <div className="flex items-center text-emerald-400 font-medium">
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  Intelligent auto-complete
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">AI Review & Suggestions</h3>
-                <p className="text-gray-400 leading-relaxed">
-                  Get intelligent feedback on your documentation with suggestions for stronger clinical phrasing and completeness.
-                </p>
-              </CardContent>
-            </Card>
+              </div>
+              <div className="animate-slide-in-right">
+                <Card className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 border-gray-600/30 backdrop-blur-lg">
+                  <CardContent className="p-8">
+                    <div className="space-y-4">
+                      <div className="h-4 bg-gray-700 rounded animate-shimmer"></div>
+                      <div className="h-4 bg-gray-700 rounded w-3/4 animate-shimmer" style={{animationDelay: '0.2s'}}></div>
+                      <div className="h-4 bg-gray-700 rounded w-1/2 animate-shimmer" style={{animationDelay: '0.4s'}}></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
 
-            {/* Feature 3 */}
-            <Card className="bg-gradient-to-br from-gray-900/50 to-gray-800/30 border-gray-600/50 backdrop-blur-sm hover:border-cyan-500/50 transition-all duration-300 group">
-              <CardContent className="p-8">
-                <div className="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <FileText className="w-6 h-6 text-white" />
+            {/* Step 2 */}
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="lg:order-2 animate-slide-in-right">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-teal-600/20 border border-teal-500/30 text-teal-300 text-sm font-medium mb-6">
+                  Step 2
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">Smart Input Assistant</h3>
-                <p className="text-gray-400 leading-relaxed">
-                  Structured patient information forms with symptom checklists and system selectors to enhance AI generation.
+                <h3 className="text-3xl font-bold text-white mb-6">AI Generates Each Section</h3>
+                <p className="text-xl text-gray-400 leading-relaxed mb-8">
+                  Watch as our AI crafts each SOAP section with medical precision. Generate sections individually or all at once.
                 </p>
-              </CardContent>
-            </Card>
-          </div>
+                <div className="flex items-center text-teal-400 font-medium">
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Real-time generation
+                </div>
+              </div>
+              <div className="lg:order-1 animate-slide-in-left">
+                <Card className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 border-gray-600/30 backdrop-blur-lg">
+                  <CardContent className="p-8">
+                    <div className="flex items-center mb-4">
+                      <div className="w-3 h-3 bg-emerald-400 rounded-full animate-pulse mr-3"></div>
+                      <span className="text-emerald-400 text-sm">Generating...</span>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="h-3 bg-gradient-to-r from-emerald-500/20 to-transparent rounded animate-shimmer"></div>
+                      <div className="h-3 bg-gradient-to-r from-emerald-500/20 to-transparent rounded w-4/5 animate-shimmer" style={{animationDelay: '0.3s'}}></div>
+                      <div className="h-3 bg-gradient-to-r from-emerald-500/20 to-transparent rounded w-3/5 animate-shimmer" style={{animationDelay: '0.6s'}}></div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
 
-          {/* CTA Section */}
-          <div className="text-center mt-16">
-            <h3 className="text-2xl font-bold text-white mb-8">Choose Your Report Type</h3>
-            <div className="grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
-              <Link href="/soap">
-                <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-300 transform hover:scale-105 border border-emerald-500/30">
-                  <FileText className="w-6 h-6 mr-3" />
-                  <div className="text-left">
-                    <div className="font-bold">SOAP Notes</div>
-                    <div className="text-sm opacity-90">Structured clinical documentation</div>
-                  </div>
-                </Button>
-              </Link>
-              
-              <Link href="/progress">
-                <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-2xl shadow-blue-900/50 hover:shadow-blue-900/70 transition-all duration-300 transform hover:scale-105 border border-blue-500/30">
-                  <Clock className="w-6 h-6 mr-3" />
-                  <div className="text-left">
-                    <div className="font-bold">Progress Notes</div>
-                    <div className="text-sm opacity-90">Patient follow-up documentation</div>
-                  </div>
-                </Button>
-              </Link>
-              
-              <Link href="/discharge">
-                <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white px-8 py-6 text-lg font-semibold rounded-xl shadow-2xl shadow-purple-900/50 hover:shadow-purple-900/70 transition-all duration-300 transform hover:scale-105 border border-purple-500/30">
-                  <CheckCircle className="w-6 h-6 mr-3" />
-                  <div className="text-left">
-                    <div className="font-bold">Discharge Summary</div>
-                    <div className="text-sm opacity-90">Hospital discharge documentation</div>
-                  </div>
-                </Button>
-              </Link>
+            {/* Step 3 */}
+            <div className="grid lg:grid-cols-2 gap-16 items-center">
+              <div className="animate-slide-in-left">
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-cyan-600/20 border border-cyan-500/30 text-cyan-300 text-sm font-medium mb-6">
+                  Step 3
+                </div>
+                <h3 className="text-3xl font-bold text-white mb-6">Review & Refine</h3>
+                <p className="text-xl text-gray-400 leading-relaxed mb-8">
+                  Get AI-powered suggestions to improve clarity, completeness, and medical accuracy. Perfect your documentation before finalizing.
+                </p>
+                <div className="flex items-center text-cyan-400 font-medium">
+                  <Shield className="w-5 h-5 mr-2" />
+                  Quality assurance built-in
+                </div>
+              </div>
+              <div className="animate-slide-in-right">
+                <Card className="bg-gradient-to-br from-gray-900/60 to-gray-800/40 border-gray-600/30 backdrop-blur-lg">
+                  <CardContent className="p-8">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-yellow-400 text-sm font-medium">Review Complete</span>
+                      <CheckCircle className="w-5 h-5 text-green-400" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="text-green-400 text-xs">✓ Medical terminology accurate</div>
+                      <div className="text-green-400 text-xs">✓ Documentation complete</div>
+                      <div className="text-yellow-400 text-xs">⚠ Consider adding vitals</div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 py-12 px-6 lg:px-8 border-t border-gray-800">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div>
+              <span className="text-xl font-bold text-white">Medinote</span>
+              <p className="text-gray-400 mt-4">The future of medical documentation</p>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Product</h4>
+              <div className="space-y-2 text-gray-400">
+                <div>SOAP Notes</div>
+                <div>Progress Notes</div>
+                <div>Discharge Summaries</div>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Company</h4>
+              <div className="space-y-2 text-gray-400">
+                <div>Privacy Policy</div>
+                <div>Terms of Service</div>
+                <div>Security</div>
+              </div>
+            </div>
+            <div>
+              <h4 className="text-white font-semibold mb-4">Support</h4>
+              <div className="space-y-2 text-gray-400">
+                <div>Documentation</div>
+                <div>Contact Us</div>
+                <div>Help Center</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
