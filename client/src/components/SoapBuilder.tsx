@@ -166,7 +166,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
   const [showReview, setShowReview] = useState(false);
   const [reviewData, setReviewData] = useState<any>(null);
-  const [draftTitle, setDraftTitle] = useState(`New ${reportType.toUpperCase()} Note`);
+  const [draftTitle, setDraftTitle] = useState("New Note");
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -250,7 +250,15 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
       queryClient.invalidateQueries({ queryKey: ["/api/drafts"] });
       toast({
         title: "Draft Saved",
-        description: "Your SOAP note has been saved successfully."
+        description: "Your note has been saved successfully."
+      });
+    },
+    onError: (error) => {
+      console.error("Draft save error:", error);
+      toast({
+        title: "Save Failed",
+        description: error instanceof Error ? error.message : "Failed to save draft",
+        variant: "destructive"
       });
     }
   });
@@ -298,6 +306,11 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
     if (draft.patientInfo?.symptoms) {
       setSelectedSymptoms(draft.patientInfo.symptoms);
     }
+    
+    toast({
+      title: "Draft Loaded",
+      description: `Loaded "${draft.title}" successfully.`
+    });
   };
 
   const handleReviewReport = () => {
@@ -322,11 +335,19 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
   };
 
   const toggleSymptom = (symptom: string) => {
-    setSelectedSymptoms(prev => 
-      prev.includes(symptom)
+    setSelectedSymptoms(prev => {
+      const newSymptoms = prev.includes(symptom)
         ? prev.filter(s => s !== symptom)
-        : [...prev, symptom]
-    );
+        : [...prev, symptom];
+      
+      // Update patient info with current symptoms
+      setPatientInfo(current => ({
+        ...current,
+        symptoms: newSymptoms
+      }));
+      
+      return newSymptoms;
+    });
   };
 
   const getReportConfig = () => {
@@ -411,7 +432,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                   Assistant
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[400px] sm:w-[540px]">
+              <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
                 <SheetHeader>
                   <SheetTitle>Input Assistant</SheetTitle>
                   <SheetDescription>
@@ -419,7 +440,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                   </SheetDescription>
                 </SheetHeader>
                 
-                <div className="space-y-6 mt-6">
+                <div className="space-y-6 mt-6 pb-6">
                   {/* Patient Info */}
                   <div className="space-y-4">
                     <h3 className="font-semibold flex items-center gap-2">
@@ -529,16 +550,16 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                   <div className="space-y-4">
                     <h3 className="font-semibold">Load Previous Drafts</h3>
                     {drafts && drafts.length > 0 ? (
-                      <div className="space-y-2">
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
                         {drafts.map((draft: SoapDraft) => (
                           <Button
                             key={draft.id}
                             variant="ghost"
-                            className="w-full justify-start"
+                            className="w-full justify-start text-left"
                             onClick={() => handleLoadDraft(draft)}
                           >
-                            <FileText className="w-4 h-4 mr-2" />
-                            {draft.title}
+                            <FileText className="w-4 h-4 mr-2 flex-shrink-0" />
+                            <span className="truncate">{draft.title}</span>
                           </Button>
                         ))}
                       </div>
