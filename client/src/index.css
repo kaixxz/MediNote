@@ -45,11 +45,28 @@
 
 /* AI Review Dialog fixes */
 [data-radix-dialog-overlay] {
-  z-index: 1000 !important;
+  z-index: 9998 !important;
+  position: fixed !important;
+  inset: 0 !important;
 }
 
 [data-radix-dialog-content] {
-  z-index: 1001 !important;
+  z-index: 9999 !important;
+  position: fixed !important;
+  top: 50vh !important;
+  left: 50vw !important;
+  transform: translate(-50%, -50%) !important;
+  max-height: 90vh !important;
+  max-width: min(95vw, 1536px) !important;
+}
+
+/* Ensure dialog is always centered in viewport */
+.ai-review-dialog {
+  position: fixed !important;
+  top: 50vh !important;
+  left: 50vw !important;
+  transform: translate(-50%, -50%) !important;
+  z-index: 9999 !important;
 }
 
 /* Custom animations */
