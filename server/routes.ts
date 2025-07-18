@@ -7,7 +7,7 @@ import {
   reviewReportSchema, 
   saveDraftSchema 
 } from "@shared/schema";
-import { generateMedicalReport, generateSoapSection, reviewSoapReport } from "./services/ai";
+import { generateMedicalReport, generateSoapSection, reviewSoapReport, generateSmartSuggestions } from "./services/ai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint
@@ -47,6 +47,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("Error reviewing report:", error);
       res.status(500).json({ 
         message: error instanceof Error ? error.message : "Failed to review report" 
+      });
+    }
+  });
+
+  // Smart suggestions endpoint for auto-fill functionality
+  app.post("/api/smart-suggestions", async (req, res) => {
+    try {
+      const { symptom, currentInfo, reportType } = req.body;
+      
+      const suggestions = await generateSmartSuggestions(symptom, currentInfo, reportType);
+      
+      res.json(suggestions);
+    } catch (error) {
+      console.error("Error generating smart suggestions:", error);
+      res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Failed to generate suggestions" 
       });
     }
   });

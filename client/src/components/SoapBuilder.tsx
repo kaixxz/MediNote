@@ -180,6 +180,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
   const [showExport, setShowExport] = useState(false);
   const [exportFormat, setExportFormat] = useState<"pdf" | "docx" | null>(null);
   const [copySuccess, setCopySuccess] = useState(false);
+  const [isAutoFilling, setIsAutoFilling] = useState(false);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -426,8 +427,75 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
         symptoms: newSymptoms
       }));
       
+      // Auto-fill relevant fields when symptom is selected
+      if (!prev.includes(symptom)) {
+        autoFillFromSymptom(symptom);
+      }
+      
       return newSymptoms;
     });
+  };
+
+  // Smart auto-fill function that uses AI to populate relevant fields
+  const autoFillFromSymptom = async (symptom: string) => {
+    setIsAutoFilling(true);
+    try {
+      const suggestions = await getSmartSuggestions(symptom);
+      
+      let fieldsUpdated = [];
+      
+      // Auto-fill chief complaint if empty
+      if (!patientInfo.chiefComplaint && suggestions.chiefComplaint) {
+        setPatientInfo(prev => ({
+          ...prev,
+          chiefComplaint: suggestions.chiefComplaint
+        }));
+        fieldsUpdated.push("Chief Complaint");
+      }
+      
+      // Auto-fill affected system if not set
+      if (!patientInfo.affectedSystem && suggestions.affectedSystem) {
+        setPatientInfo(prev => ({
+          ...prev,
+          affectedSystem: suggestions.affectedSystem
+        }));
+        fieldsUpdated.push("Affected System");
+      }
+      
+      // Auto-fill subjective section if empty
+      if (!sectionContent.subjective && suggestions.subjectiveContent) {
+        setSectionContent(prev => ({
+          ...prev,
+          subjective: suggestions.subjectiveContent
+        }));
+        fieldsUpdated.push("Subjective Section");
+      }
+      
+      if (fieldsUpdated.length > 0) {
+        toast({
+          title: "🤖 Smart Auto-Fill Active",
+          description: `Updated: ${fieldsUpdated.join(", ")} based on "${symptom}"`,
+        });
+      }
+    } catch (error) {
+      // Silently fail - don't show error for this enhancement feature
+      console.log("Auto-fill enhancement skipped");
+    } finally {
+      setIsAutoFilling(false);
+    }
+  };
+
+  // Get AI suggestions based on symptom
+  const getSmartSuggestions = async (symptom: string) => {
+    const response = await apiRequest("/api/smart-suggestions", {
+      method: "POST",
+      body: JSON.stringify({ 
+        symptom,
+        currentInfo: patientInfo,
+        reportType
+      })
+    });
+    return response;
   };
 
   const getReportConfig = () => {
@@ -775,18 +843,31 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                     </h3>
                     <div className="grid grid-cols-2 gap-2">
                       {commonSymptoms.map(symptom => (
-                        <div key={symptom} className="flex items-center space-x-2">
+                        <div key={symptom} className="flex items-center space-x-2 relative">
                           <Checkbox
                             id={symptom}
                             checked={selectedSymptoms.includes(symptom)}
                             onCheckedChange={() => toggleSymptom(symptom)}
+                            disabled={isAutoFilling}
                           />
-                          <Label htmlFor={symptom} className="text-sm">
+                          <Label htmlFor={symptom} className={`text-sm ${isAutoFilling ? 'opacity-50' : ''}`}>
                             {symptom}
                           </Label>
+                          {isAutoFilling && selectedSymptoms.includes(symptom) && (
+                            <div className="absolute -right-1 -top-1">
+                              <Sparkles className="w-3 h-3 text-blue-400 animate-spin" />
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
+                    
+                    {isAutoFilling && (
+                      <div className="flex items-center gap-2 text-blue-400 text-sm mt-3 p-2 bg-blue-900/20 rounded-lg border border-blue-500/30">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>AI is auto-filling relevant fields...</span>
+                      </div>
+                    )}
                     
                     {selectedSymptoms.length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-4">

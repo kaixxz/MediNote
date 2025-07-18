@@ -360,3 +360,65 @@ Remember, your final output should include only the content within the <patient_
     throw new Error(`Failed to generate ${reportType} note. Please check your API configuration and try again.`);
   }
 }
+
+export async function generateSmartSuggestions(symptom: string, currentInfo: any, reportType: string): Promise<any> {
+  try {
+    const systemPrompt = `You are an AI medical assistant that helps auto-fill medical documentation forms based on symptoms. When a user selects a symptom, provide intelligent suggestions for relevant form fields.
+
+Based on the symptom provided, generate appropriate content for:
+1. Chief complaint (brief, professional statement)
+2. Affected system (which body system is most likely involved)
+3. Subjective section starter (brief initial content for the subjective section)
+
+Consider the current patient information and report type when making suggestions.
+
+Return your response as a JSON object with this structure:
+{
+  "chiefComplaint": "Brief chief complaint related to the symptom",
+  "affectedSystem": "primary body system affected (lowercase)",
+  "subjectiveContent": "Initial subjective section content related to the symptom"
+}
+
+Keep suggestions professional, concise, and medically appropriate. Use only information that can be reasonably inferred from the symptom.`;
+
+    const contextInfo = currentInfo ? `
+Current Patient Info:
+- Age: ${currentInfo.age || 'Not specified'}
+- Gender: ${currentInfo.gender || 'Not specified'}
+- Existing Chief Complaint: ${currentInfo.chiefComplaint || 'None'}
+- Current Symptoms: ${currentInfo.symptoms?.join(', ') || 'None'}
+- Report Type: ${reportType}
+` : '';
+
+    const response = await anthropic.messages.create({
+      max_tokens: 1000,
+      temperature: 0.3,
+      messages: [
+        {
+          role: 'user',
+          content: [
+            {
+              type: 'text',
+              text: systemPrompt
+            },
+            {
+              type: 'text',
+              text: `Selected Symptom: ${symptom}${contextInfo}`
+            }
+          ]
+        }
+      ],
+      model: DEFAULT_MODEL_STR,
+    });
+
+    const textContent = response.content.find(content => content.type === 'text');
+    if (!textContent) {
+      throw new Error('No text content in AI response');
+    }
+
+    return JSON.parse(textContent.text);
+  } catch (error) {
+    console.error('Error generating smart suggestions:', error);
+    throw new Error('Failed to generate smart suggestions. Please try again.');
+  }
+}
