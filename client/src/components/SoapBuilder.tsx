@@ -516,7 +516,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto bg-gradient-to-br from-slate-950 to-slate-900 border-l-2 border-blue-500/30">
+              <SheetContent className="w-[400px] sm:w-[540px] h-full max-h-screen overflow-hidden bg-gradient-to-br from-slate-950 to-slate-900 border-l-2 border-blue-500/30 flex flex-col">
                 <SheetHeader className="pb-6">
                   <SheetTitle className="flex items-center gap-2 text-2xl">
                     <Bot className="w-6 h-6 text-blue-400 animate-pulse" />
@@ -530,7 +530,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                   </SheetDescription>
                 </SheetHeader>
                 
-                <div className="space-y-8 mt-6 pb-6">
+                <div className="flex-1 overflow-y-auto space-y-8 mt-6 pb-6">
                   {/* Patient Info */}
                   <div className="space-y-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl p-6 border border-blue-500/20">
                     <h3 className="font-semibold flex items-center gap-2 text-blue-300">
@@ -804,11 +804,28 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                       <div className="space-y-2">
                         <div className="flex items-center gap-2 text-green-400">
                           <CheckCircle className="w-4 h-4" />
-                          <span className="text-sm font-medium">Medical terminology accurate</span>
+                          <span className="text-sm font-medium">Medical terminology reviewed</span>
                         </div>
                         <div className="flex items-center gap-2 text-green-400">
                           <CheckCircle className="w-4 h-4" />
-                          <span className="text-sm font-medium">Documentation complete</span>
+                          <span className="text-sm font-medium">Clinical elements analyzed</span>
+                        </div>
+                      </div>
+                      
+                      {/* Medical Documentation Checklist */}
+                      <div className="bg-blue-900/30 rounded-lg p-4 border border-blue-500/30 mt-4">
+                        <h4 className="text-sm font-semibold text-blue-300 mb-3 flex items-center gap-2">
+                          <AlertTriangle className="w-4 h-4" />
+                          Essential Elements Checklist
+                        </h4>
+                        <div className="space-y-2 text-xs">
+                          <div className="text-yellow-300">• Vital Signs (BP, HR, RR, Temp, O2 sat)</div>
+                          <div className="text-yellow-300">• Physical Examination Findings</div>
+                          <div className="text-yellow-300">• Chief Complaint & HPI</div>
+                          <div className="text-yellow-300">• Medications & Allergies</div>
+                          <div className="text-yellow-300">• Primary Diagnosis with ICD-10</div>
+                          <div className="text-yellow-300">• Follow-up Instructions</div>
+                          <div className="text-yellow-300">• Return Precautions</div>
                         </div>
                       </div>
                       
@@ -970,7 +987,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
 
         {/* Export Dialog */}
         <Dialog open={showExport} onOpenChange={setShowExport}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent className="sm:max-w-md fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50">
             <DialogHeader>
               <DialogTitle className="text-green-600">Export Complete!</DialogTitle>
               <DialogDescription>

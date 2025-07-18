@@ -157,3 +157,12 @@ The application is designed to be easily deployable to platforms like Replit, wi
 - Restructured page layout: Hero → Input Section → Features → Footer
 - Unified emerald/teal color scheme throughout for medical branding
 - Fixed demo SOAP note formatting with proper line breaks and structure
+
+### July 18, 2025 - Migration & UI Fixes
+- Successfully migrated project from Replit Agent to standard Replit environment
+- Fixed Dr. MediAI assistant panel scrolling issues after draft saving
+- Enhanced AI review system with comprehensive medical documentation checklist
+- Added essential elements checklist including vital signs, medications, and follow-up instructions
+- Fixed copy/download popup positioning issues - now properly centered and accessible
+- Improved AI review prompts to focus on critical medical documentation elements
+- Enhanced sheet layout for better overflow handling and scrolling behavior

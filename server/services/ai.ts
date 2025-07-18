@@ -150,26 +150,33 @@ Format the response as a numbered or organized list. Use proper medical terminol
 
 export async function reviewSoapReport(subjective: string, objective: string, assessment: string, plan: string): Promise<any> {
   try {
-    const systemPrompt = `You are a senior physician reviewing a SOAP note for quality and completeness. Analyze each section and provide specific feedback.
+    const systemPrompt = `You are a senior physician reviewing a SOAP note for quality and completeness. Analyze each section and provide specific feedback with a focus on essential medical elements.
 
 For each section, identify:
-1. Vague language that should be more specific
-2. Missing clinical reasoning or details
-3. Suggestions for stronger clinical phrasing
-4. Areas that need more information
+1. Missing vital signs or physical examination findings
+2. Vague language that should be more specific
+3. Missing clinical reasoning or details
+4. Suggestions for stronger clinical phrasing
+5. Essential medical documentation elements that should be included
+
+CRITICAL ITEMS TO CHECK FOR:
+- SUBJECTIVE: Chief complaint, HPI, PMH, medications, allergies, social history
+- OBJECTIVE: Vital signs (BP, HR, RR, Temp, O2 sat), physical exam by systems, labs/imaging if relevant
+- ASSESSMENT: Primary diagnosis with ICD-10 considerations, differential diagnoses, clinical reasoning
+- PLAN: Specific treatments, medications with dosages, follow-up instructions, patient education, return precautions
 
 Return your analysis as a JSON object with this structure:
 {
   "suggestions": [
     {
       "section": "subjective|objective|assessment|plan",
-      "issues": ["list of identified issues"],
-      "suggestions": ["list of specific improvements"]
+      "issues": ["list of identified issues including missing vital elements"],
+      "suggestions": ["list of specific improvements including essential medical items to add"]
     }
   ]
 }
 
-Focus on clinical accuracy, completeness, and professional documentation standards.`;
+Focus on clinical accuracy, completeness, and professional documentation standards. Always suggest including vital signs if missing from objective section.`;
 
     const fullReport = `SUBJECTIVE:\n${subjective}\n\nOBJECTIVE:\n${objective}\n\nASSESSMENT:\n${assessment}\n\nPLAN:\n${plan}`;
 
