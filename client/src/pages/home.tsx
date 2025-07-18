@@ -163,13 +163,13 @@ DISCHARGE CONDITION: Stable`
       </nav>
 
       {/* Hero Section */}
-      <section className="relative z-10 flex items-center min-h-[80vh] px-6 lg:px-8">
+      <section className="relative z-10 flex items-center min-h-[75vh] px-6 lg:px-8">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             {/* Left Content */}
             <div className="text-center lg:text-left animate-fade-in">
-              <div className="mb-12">
-                <h1 className="text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+              <div className="mb-8">
+                <h1 className="text-4xl lg:text-6xl font-bold text-white mb-4 leading-tight">
                   The Future of
                   <span className="bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 bg-clip-text text-transparent block">
                     Medical Documentation

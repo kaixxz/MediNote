@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
   Loader2, 
   Sparkles, 
@@ -33,7 +33,14 @@ import {
   ArrowLeft,
   RefreshCw,
   Eye,
-  Star
+  Star,
+  Trash2,
+  Download,
+  Copy,
+  X,
+  Check,
+  Bot,
+  Zap
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -167,6 +174,12 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
   const [showReview, setShowReview] = useState(false);
   const [reviewData, setReviewData] = useState<any>(null);
   const [draftTitle, setDraftTitle] = useState("New Note");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<{ id: number; title: string } | null>(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
+  const [showExport, setShowExport] = useState(false);
+  const [exportFormat, setExportFormat] = useState<"pdf" | "docx" | null>(null);
+  const [copySuccess, setCopySuccess] = useState(false);
   
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -263,6 +276,32 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
     }
   });
 
+  // Delete draft mutation
+  const deleteDraftMutation = useMutation({
+    mutationFn: async (id: number): Promise<void> => {
+      await apiRequest(`/api/drafts/${id}`, {
+        method: "DELETE"
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/drafts"] });
+      setShowDeleteConfirm(null);
+      setDeleteConfirmText("");
+      toast({
+        title: "Draft Deleted",
+        description: "The draft has been permanently deleted.",
+        variant: "destructive"
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Delete Failed",
+        description: error instanceof Error ? error.message : "Failed to delete draft",
+        variant: "destructive"
+      });
+    }
+  });
+
   const handleGenerateSection = (section: "subjective" | "objective" | "assessment" | "plan") => {
     const content = sectionContent[section];
     if (!content.trim()) {
@@ -336,6 +375,35 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
       return;
     }
     reviewReportMutation.mutate({ subjective, objective, assessment, plan });
+  };
+
+  const handleDeleteDraft = (draft: SoapDraft) => {
+    setShowDeleteConfirm({ id: draft.id, title: draft.title });
+    setDeleteConfirmText("");
+  };
+
+  const confirmDelete = () => {
+    if (showDeleteConfirm && deleteConfirmText === `I want to delete ${showDeleteConfirm.title}`) {
+      deleteDraftMutation.mutate(showDeleteConfirm.id);
+    }
+  };
+
+  const handleExportComplete = () => {
+    setShowExport(true);
+  };
+
+  const handleCopyToClipboard = () => {
+    const { subjective, objective, assessment, plan } = sectionContent;
+    const fullReport = `SUBJECTIVE:\n${subjective}\n\nOBJECTIVE:\n${objective}\n\nASSESSMENT:\n${assessment}\n\nPLAN:\n${plan}`;
+    
+    navigator.clipboard.writeText(fullReport).then(() => {
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+      toast({
+        title: "Copied to Clipboard",
+        description: "Your report has been copied to clipboard."
+      });
+    });
   };
 
   const toggleSection = (section: string) => {
@@ -437,26 +505,36 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
             </Button>
             
             {/* Patient Assistant Sheet */}
-            <Sheet>
+            <Sheet open={isAssistantOpen} onOpenChange={setIsAssistantOpen}>
               <SheetTrigger asChild>
-                <Button variant="outline">
-                  <Settings className="w-4 h-4 mr-2" />
-                  Assistant
+                <Button variant="outline" className="group relative overflow-hidden">
+                  <div className="flex items-center">
+                    <Bot className="w-4 h-4 mr-2 group-hover:animate-pulse" />
+                    <span className="mr-2">Dr. MediAI</span>
+                    <Star className="w-4 h-4 text-yellow-500 animate-pulse" />
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
-                <SheetHeader>
-                  <SheetTitle>Input Assistant</SheetTitle>
-                  <SheetDescription>
-                    Configure patient information and symptoms to enhance AI generation
+              <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto bg-gradient-to-br from-slate-950 to-slate-900 border-l-2 border-blue-500/30">
+                <SheetHeader className="pb-6">
+                  <SheetTitle className="flex items-center gap-2 text-2xl">
+                    <Bot className="w-6 h-6 text-blue-400 animate-pulse" />
+                    <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                      Dr. MediAI
+                    </span>
+                    <Star className="w-5 h-5 text-yellow-500 animate-pulse" />
+                  </SheetTitle>
+                  <SheetDescription className="text-gray-300">
+                    Your AI medical documentation assistant - Configure patient information and symptoms to enhance AI generation
                   </SheetDescription>
                 </SheetHeader>
                 
-                <div className="space-y-6 mt-6 pb-6">
+                <div className="space-y-8 mt-6 pb-6">
                   {/* Patient Info */}
-                  <div className="space-y-4">
-                    <h3 className="font-semibold flex items-center gap-2">
-                      <User className="w-4 h-4" />
+                  <div className="space-y-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl p-6 border border-blue-500/20">
+                    <h3 className="font-semibold flex items-center gap-2 text-blue-300">
+                      <User className="w-5 h-5 animate-pulse" />
                       Patient Information
                     </h3>
                     
@@ -525,11 +603,14 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                     </div>
                   </div>
                   
-                  <Separator />
+                  <Separator className="bg-blue-500/20" />
                   
                   {/* Symptoms */}
-                  <div className="space-y-4">
-                    <h3 className="font-semibold">Common Symptoms</h3>
+                  <div className="space-y-4 bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-xl p-6 border border-purple-500/20">
+                    <h3 className="font-semibold flex items-center gap-2 text-purple-300">
+                      <Zap className="w-5 h-5 animate-pulse" />
+                      Common Symptoms
+                    </h3>
                     <div className="grid grid-cols-2 gap-2">
                       {commonSymptoms.map(symptom => (
                         <div key={symptom} className="flex items-center space-x-2">
@@ -556,27 +637,42 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                     )}
                   </div>
                   
-                  <Separator />
+                  <Separator className="bg-blue-500/20" />
                   
                   {/* Load Previous Drafts */}
-                  <div className="space-y-4">
-                    <h3 className="font-semibold">Load Previous Drafts</h3>
+                  <div className="space-y-4 bg-gradient-to-r from-emerald-900/20 to-teal-900/20 rounded-xl p-6 border border-emerald-500/20">
+                    <h3 className="font-semibold flex items-center gap-2 text-emerald-300">
+                      <FileText className="w-5 h-5 animate-pulse" />
+                      Previous Drafts
+                    </h3>
                     {drafts && drafts.length > 0 ? (
-                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                      <div className="space-y-2 max-h-64 overflow-y-auto custom-scrollbar">
                         {drafts.map((draft: SoapDraft) => (
-                          <Button
-                            key={draft.id}
-                            variant="ghost"
-                            className="w-full justify-start text-left"
-                            onClick={() => handleLoadDraft(draft)}
-                          >
-                            <FileText className="w-4 h-4 mr-2 flex-shrink-0" />
-                            <span className="truncate">{draft.title}</span>
-                          </Button>
+                          <div key={draft.id} className="flex items-center gap-2 p-3 bg-slate-800/50 rounded-lg border border-slate-700/50 hover:border-emerald-500/50 transition-all duration-200 group">
+                            <Button
+                              variant="ghost"
+                              className="flex-1 justify-start text-left h-auto p-0 hover:bg-transparent"
+                              onClick={() => handleLoadDraft(draft)}
+                            >
+                              <FileText className="w-4 h-4 mr-2 flex-shrink-0 text-emerald-400 group-hover:animate-pulse" />
+                              <span className="truncate text-gray-300 group-hover:text-white">{draft.title}</span>
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                              onClick={() => handleDeleteDraft(draft)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-sm text-gray-500">No saved drafts yet</p>
+                      <div className="text-center py-8">
+                        <FileText className="w-12 h-12 text-gray-600 mx-auto mb-4 animate-pulse" />
+                        <p className="text-gray-500">Empty :( No saved drafts yet</p>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -661,107 +757,263 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
           })}
         </div>
 
-        {/* AI Review Modal */}
+        {/* AI Review Sidebar */}
         <Dialog open={showReview} onOpenChange={setShowReview}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-500" />
-                AI Review & Suggestions
-              </DialogTitle>
-              <DialogDescription>
-                Our AI has analyzed your {reportType.toUpperCase()} note and provided suggestions for improvement.
-              </DialogDescription>
-            </DialogHeader>
-            
-            {reviewData && (
-              <div className="space-y-6">
-                {reviewData.suggestions?.map((suggestion: any, index: number) => (
-                  <Card key={index} className="border-l-4 border-l-amber-500">
-                    <CardHeader>
-                      <CardTitle className="text-lg capitalize">
-                        {suggestion.section} Section
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      {suggestion.issues.length > 0 && (
-                        <div>
-                          <h4 className="font-semibold text-red-700 mb-2">Issues Identified:</h4>
-                          <ul className="list-disc list-inside space-y-1 text-sm text-red-600">
-                            {suggestion.issues.map((issue: string, i: number) => (
-                              <li key={i}>{issue}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                      
-                      {suggestion.suggestions.length > 0 && (
-                        <div>
-                          <h4 className="font-semibold text-green-700 mb-2">Suggestions:</h4>
-                          <ul className="list-disc list-inside space-y-1 text-sm text-green-600">
-                            {suggestion.suggestions.map((sug: string, i: number) => (
-                              <li key={i}>{sug}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden p-0">
+            <div className="flex h-[80vh]">
+              {/* Report Content */}
+              <div className="flex-1 p-6 overflow-y-auto">
+                <DialogHeader className="mb-6">
+                  <DialogTitle className="text-2xl font-bold">Review Your Documentation</DialogTitle>
+                  <DialogDescription>
+                    Review your completed note and apply AI suggestions for improvement.
+                  </DialogDescription>
+                </DialogHeader>
                 
-                <div className="flex justify-end gap-3 pt-4">
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setShowReview(false)}
-                  >
-                    Close
-                  </Button>
-                  <Button 
-                    onClick={() => {
-                      setShowReview(false);
-                      // Could trigger a regeneration based on suggestions
-                    }}
-                    className={`bg-gradient-to-r ${config.gradientFrom} ${config.gradientTo}`}
-                  >
-                    Apply Suggestions
-                  </Button>
+                <div className="space-y-6">
+                  {sections.map((section) => (
+                    <Card key={section.key} className="border-l-4 border-l-blue-500">
+                      <CardHeader>
+                        <CardTitle className="text-lg capitalize">{section.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="prose prose-sm max-w-none">
+                          <p className="whitespace-pre-wrap text-gray-700">
+                            {sectionContent[section.key] || "No content yet"}
+                          </p>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
               </div>
-            )}
+              
+              {/* AI Review Sidebar */}
+              <div className="w-96 bg-gradient-to-br from-slate-900 to-slate-800 border-l border-slate-700 overflow-y-auto">
+                <div className="p-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="p-2 bg-yellow-500/20 rounded-lg">
+                      <Sparkles className="w-5 h-5 text-yellow-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white">Review Complete</h3>
+                  </div>
+                  
+                  {reviewData && reviewData.suggestions && (
+                    <div className="space-y-4">
+                      {/* Success Items */}
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2 text-green-400">
+                          <CheckCircle className="w-4 h-4" />
+                          <span className="text-sm font-medium">Medical terminology accurate</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-green-400">
+                          <CheckCircle className="w-4 h-4" />
+                          <span className="text-sm font-medium">Documentation complete</span>
+                        </div>
+                      </div>
+                      
+                      {/* Warnings/Suggestions */}
+                      {reviewData.suggestions.length > 0 && (
+                        <div className="space-y-3 mt-6">
+                          {reviewData.suggestions.map((suggestion: any, index: number) => (
+                            <div key={index} className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+                              <div className="flex items-center gap-2 mb-2">
+                                <AlertTriangle className="w-4 h-4 text-yellow-400" />
+                                <span className="text-sm font-medium text-yellow-300 capitalize">
+                                  {suggestion.section} Section
+                                </span>
+                              </div>
+                              
+                              {suggestion.issues.length > 0 && (
+                                <div className="mb-3">
+                                  <ul className="text-xs text-gray-300 space-y-1">
+                                    {suggestion.issues.map((issue: string, i: number) => (
+                                      <li key={i} className="flex items-start gap-2">
+                                        <span className="text-yellow-400 mt-1">•</span>
+                                        <span>{issue}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                              
+                              {suggestion.suggestions.length > 0 && (
+                                <div>
+                                  <h5 className="text-xs font-medium text-green-400 mb-1">Suggestions:</h5>
+                                  <ul className="text-xs text-gray-300 space-y-1">
+                                    {suggestion.suggestions.map((sug: string, i: number) => (
+                                      <li key={i} className="flex items-start gap-2">
+                                        <span className="text-green-400 mt-1">•</span>
+                                        <span>{sug}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  <div className="flex flex-col gap-3 mt-8">
+                    <Button 
+                      className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white"
+                      onClick={() => {
+                        setShowReview(false);
+                        handleExportComplete();
+                      }}
+                    >
+                      <CheckCircle className="w-4 h-4 mr-2" />
+                      Approve & Export
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-slate-600 text-slate-300 hover:bg-slate-800"
+                      onClick={() => setShowReview(false)}
+                    >
+                      Continue Editing
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </DialogContent>
         </Dialog>
 
         {/* Review Section */}
         {completedSections.length === 4 && (
-          <Card className={`mt-8 border-${config.color}-200 bg-${config.color}-50`}>
+          <Card className="mt-8 border-l-4 border-l-green-500 bg-gradient-to-r from-green-50 to-emerald-50 shadow-lg">
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className={`font-semibold text-${config.color}-900 mb-2`}>
+                  <h3 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
                     {config.title.split(' ')[0]} Note Complete!
                   </h3>
-                  <p className={`text-${config.color}-700`}>
-                    All sections are completed. Generate AI suggestions to improve your documentation.
+                  <p className="text-green-700">
+                    All sections are completed. Review and export your documentation.
                   </p>
                 </div>
                 
-                <Button
-                  onClick={handleReviewReport}
-                  disabled={reviewReportMutation.isPending}
-                  variant="outline"
-                  className={`border-${config.color}-300 text-${config.color}-700 hover:bg-${config.color}-100`}
-                >
-                  {reviewReportMutation.isPending ? (
-                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                  ) : (
-                    <Eye className="w-4 h-4 mr-2" />
-                  )}
-                  AI Review & Suggestions
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={handleReviewReport}
+                    disabled={reviewReportMutation.isPending}
+                    variant="outline"
+                    className="border-green-300 text-green-700 hover:bg-green-100"
+                  >
+                    {reviewReportMutation.isPending ? (
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    ) : (
+                      <Eye className="w-4 h-4 mr-2" />
+                    )}
+                    AI Review
+                  </Button>
+                  <Button
+                    onClick={handleExportComplete}
+                    className="bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700"
+                  >
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Complete & Export
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
         )}
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={showDeleteConfirm !== null} onOpenChange={() => setShowDeleteConfirm(null)}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-red-600">Delete Draft</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. To confirm deletion, please type exactly:
+                <br />
+                <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded mt-2 block">
+                  I want to delete {showDeleteConfirm?.title}
+                </span>
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <Input
+                value={deleteConfirmText}
+                onChange={(e) => setDeleteConfirmText(e.target.value)}
+                placeholder="Type the confirmation text..."
+                className="font-mono text-sm"
+              />
+              <div className="flex justify-end gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowDeleteConfirm(null)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  disabled={deleteConfirmText !== `I want to delete ${showDeleteConfirm?.title}` || deleteDraftMutation.isPending}
+                  onClick={confirmDelete}
+                >
+                  {deleteDraftMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  ) : (
+                    <Trash2 className="w-4 h-4 mr-2" />
+                  )}
+                  Delete Forever
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Export Dialog */}
+        <Dialog open={showExport} onOpenChange={setShowExport}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-green-600">Export Complete!</DialogTitle>
+              <DialogDescription>
+                Your medical documentation is ready. Choose how you'd like to save it.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Button
+                  variant="outline"
+                  className="h-20 flex flex-col gap-2 hover:bg-red-50"
+                  onClick={() => setExportFormat("pdf")}
+                >
+                  <FileText className="w-8 h-8 text-red-600" />
+                  <span>PDF</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="h-20 flex flex-col gap-2 hover:bg-blue-50"
+                  onClick={() => setExportFormat("docx")}
+                >
+                  <FileText className="w-8 h-8 text-blue-600" />
+                  <span>DOC/DOCX</span>
+                </Button>
+              </div>
+              <div className="flex justify-center">
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2 relative group"
+                  onClick={handleCopyToClipboard}
+                >
+                  {copySuccess ? (
+                    <Check className="w-4 h-4 text-green-600 animate-pulse" />
+                  ) : (
+                    <Copy className="w-4 h-4" />
+                  )}
+                  <span>{copySuccess ? "Copied!" : "Copy to Clipboard"}</span>
+                  <div className="absolute inset-0 bg-green-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded"></div>
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
   );
 }
