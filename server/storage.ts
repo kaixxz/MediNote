@@ -222,15 +222,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createSoapDraft(insertDraft: InsertSoapDraft): Promise<SoapDraft> {
-    const [draft] = await db.insert(soapDrafts).values({
-      title: insertDraft.title,
-      patientInfo: insertDraft.patientInfo,
-      subjective: insertDraft.subjective,
-      objective: insertDraft.objective,
-      assessment: insertDraft.assessment,
-      plan: insertDraft.plan,
-      completedSections: insertDraft.completedSections
-    }).returning();
+    const [draft] = await db.insert(soapDrafts).values(insertDraft).returning();
     return draft;
   }
 

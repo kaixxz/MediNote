@@ -2,7 +2,7 @@
 
 ## Overview
 
-Medinote is a full-stack web application that generates medical documentation, specifically SOAP notes, using AI. The application features a React frontend with a modern UI built using shadcn/ui components, an Express.js backend, and integrates with Anthropic's Claude AI for report generation.
+Medinote is a full-stack web application that generates medical documentation, specifically SOAP notes, using AI. The application features a React frontend with a modern UI built using shadcn/ui components, an Express.js backend, and integrates with Anthropic's Claude AI for report generation. The application now includes a credit-based monetization system with free trials and paid options.
 
 ## User Preferences
 
@@ -184,3 +184,13 @@ The application is designed to be easily deployable to platforms like Replit, wi
 - Verified all dependencies are properly installed and configured
 - Application now runs cleanly without any configuration issues
 - All three report types (SOAP, Progress Notes, Discharge Summary) fully operational with AI integration
+
+### July 18, 2025 - Credit-Based Monetization System
+- ✓ Implemented credit-based system with 3 free trial credits for new users
+- ✓ Added credit deduction for AI features (1 credit per generation/review)
+- ✓ Created three pricing tiers: Starter ($2/5 credits), Professional ($5/15 credits), Enterprise ($10/35 credits)
+- ✓ Built credit display component showing remaining credits and purchase options
+- ✓ Added proper error handling for insufficient credits with user-friendly messages
+- ✓ Integrated credit refresh after purchases and usage
+- ✓ Created comprehensive credit management API endpoints
+- ✓ Successfully deployed with production build completed

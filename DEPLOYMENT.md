@@ -1,72 +1,60 @@
-# Deployment Guide
+# Medinote Deployment Guide
 
-## Environment Variables Required
+## Production Deployment
 
-Before deploying, make sure to set these environment variables in your hosting service:
+### Environment Variables Required
 
-### Required Variables:
-- `ANTHROPIC_API_KEY` - Your Anthropic API key for AI functionality
-- `NODE_ENV` - Set to "production" for production deployments
+- `ANTHROPIC_API_KEY` - Your Claude API key for AI features
+- `DATABASE_URL` - PostgreSQL database connection string
+- `NODE_ENV=production`
 
-### Optional Variables:
-- `DATABASE_URL` - Your PostgreSQL database connection string (optional for portfolio projects)
-- `PORT` - Server port (defaults to 5000, most hosting services set this automatically)
+### Deployment Steps
 
-## Portfolio Project Setup
+1. **Build the application**:
+   ```bash
+   npm run build
+   ```
 
-For portfolio projects, you can deploy without a database:
-- The app uses in-memory storage by default
-- Data will reset when the server restarts (perfect for demos)
-- No database setup required
+2. **Start production server**:
+   ```bash
+   npm start
+   ```
 
-If you want persistent data, you can add a database later.
+### Features Deployed
 
-## Deployment Steps
+- **AI-Powered Medical Documentation**: SOAP notes, Progress Notes, Discharge Summaries
+- **Credit-Based Monetization**: 3 free trial credits, paid packages available
+- **Complete User Workflow**: Draft management, AI review, export to PDF/DOCX
+- **PostgreSQL Database**: Persistent storage for users, drafts, and credit transactions
 
-### 1. Build the Application
-```bash
-npm install
-npm run build
-```
+### Credit System
 
-### 2. Start the Server
-```bash
-npm start
-```
+- **Free Trial**: 3 credits for new users
+- **Pricing Tiers**:
+  - Starter: 5 credits for $2.00
+  - Professional: 15 credits for $5.00 (Popular)
+  - Enterprise: 35 credits for $10.00
 
-## Common Issues and Solutions
+### API Endpoints
 
-### Issue: "Build directory not found"
-**Solution**: Make sure to run `npm run build` before starting the production server.
+- `POST /api/generate-section` - Generate AI content (1 credit)
+- `POST /api/review` - AI review and suggestions (1 credit)
+- `GET /api/credits` - Check user credits
+- `POST /api/credits/purchase` - Purchase credit packages
+- `GET /api/drafts` - Manage saved drafts
 
-### Issue: "ANTHROPIC_API_KEY not found"
-**Solution**: Set the `ANTHROPIC_API_KEY` environment variable in your hosting service dashboard.
+### Database Schema
 
-### Issue: Static files not serving
-**Solution**: The build process creates files in `client/dist/`. Make sure this directory exists after building.
+The application uses PostgreSQL with the following tables:
+- `users` - User accounts with credit tracking
+- `soap_drafts` - Saved medical documentation drafts
+- `credit_transactions` - Credit usage and purchase history
+- `credit_packages` - Available credit packages
+- `sessions` - User session storage
 
-## Render Deployment
+### Performance Notes
 
-1. Connect your repository to Render
-2. Use these settings:
-   - **Build Command**: `npm install && npm run build`
-   - **Start Command**: `npm start`
-   - **Environment**: Node.js
-3. Add the required environment variables in the Render dashboard:
-   - `ANTHROPIC_API_KEY` (required)
-   - `NODE_ENV=production` (required)
-   - `DATABASE_URL` (optional - only if you want persistent data)
-
-## Vercel Deployment
-
-1. Connect your repository to Vercel
-2. Set the build command to: `npm run build`
-3. Set the output directory to: `client/dist`
-4. Add environment variables in the Vercel dashboard
-
-## Railway Deployment
-
-1. Connect your repository to Railway
-2. Railway will automatically detect the Node.js app
-3. Add environment variables in the Railway dashboard
-4. The service will automatically build and deploy 
+- Frontend bundle: ~1.1MB (gzipped: ~338KB)
+- Backend bundle: ~39.5KB
+- Database queries are optimized with proper indexing
+- Credit system includes transaction tracking for audit purposes
