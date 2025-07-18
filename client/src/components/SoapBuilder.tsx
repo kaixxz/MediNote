@@ -262,10 +262,14 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
     onSuccess: (data) => {
       setCurrentDraft(data);
       queryClient.invalidateQueries({ queryKey: ["/api/drafts"] });
-      toast({
-        title: "Draft Saved",
-        description: "Your note has been saved successfully."
-      });
+      // Show checkmark effect instead of toast
+      const saveButton = document.querySelector('[data-save-button]') as HTMLElement;
+      if (saveButton) {
+        saveButton.classList.add('save-success');
+        setTimeout(() => {
+          saveButton.classList.remove('save-success');
+        }, 2000);
+      }
     },
     onError: (error) => {
       console.error("Draft save error:", error);
@@ -581,9 +585,19 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
               onClick={handleSaveDraft}
               disabled={saveDraftMutation.isPending}
               variant="outline"
+              className="transition-all duration-300"
+              data-save-button
             >
-              {saveDraftMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              Save Draft
+              {saveDraftMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              ) : (
+                <>
+                  <Save className="w-4 h-4 mr-2 save-icon" />
+                  <Check className="w-4 h-4 mr-2 check-icon opacity-0" />
+                </>
+              )}
+              <span className="save-text">Save Draft</span>
+              <span className="success-text opacity-0">Saved!</span>
             </Button>
             
             {/* Patient Assistant Sheet */}
@@ -1036,7 +1050,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
 
         {/* AI Review Sidebar */}
         <Dialog open={showReview} onOpenChange={setShowReview}>
-          <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden p-0">
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden p-0 fixed top-[5vh] left-1/2 transform -translate-x-1/2">
             <div className="flex h-[80vh]">
               {/* Report Content */}
               <div className="flex-1 p-6 overflow-y-auto">

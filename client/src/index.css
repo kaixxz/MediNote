@@ -2,6 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Save button checkmark animation */
+[data-save-button] {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-save-button] .save-icon,
+[data-save-button] .save-text {
+  transition: all 0.3s ease;
+}
+
+[data-save-button] .check-icon,
+[data-save-button] .success-text {
+  position: absolute;
+  transition: all 0.3s ease;
+}
+
+[data-save-button].save-success .save-icon {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+[data-save-button].save-success .save-text {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+[data-save-button].save-success .check-icon {
+  opacity: 1 !important;
+  transform: translateX(0);
+}
+
+[data-save-button].save-success .success-text {
+  opacity: 1 !important;
+  transform: translateX(0);
+}
+
 /* Custom animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
