@@ -283,9 +283,21 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
   };
 
   const handleSaveDraft = () => {
+    if (!draftTitle.trim()) {
+      toast({
+        title: "Title Required",
+        description: "Please enter a title for your draft.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const draftData: SaveDraftRequest = {
-      title: draftTitle,
-      patientInfo,
+      title: draftTitle.trim(),
+      patientInfo: {
+        ...patientInfo,
+        symptoms: selectedSymptoms.length > 0 ? selectedSymptoms : undefined
+      },
       ...sectionContent,
       completedSections
     };

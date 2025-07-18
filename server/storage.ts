@@ -170,7 +170,10 @@ export class DatabaseStorage implements IStorage {
 
   async updateSoapDraft(id: number, updateData: Partial<InsertSoapDraft>): Promise<SoapDraft> {
     const [draft] = await db.update(soapDrafts)
-      .set(updateData)
+      .set({
+        ...updateData,
+        updatedAt: new Date()
+      })
       .where(eq(soapDrafts.id, id))
       .returning();
     return draft;
