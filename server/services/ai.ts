@@ -416,7 +416,22 @@ Current Patient Info:
       throw new Error('No text content in AI response');
     }
 
-    return JSON.parse(textContent.text);
+    // Clean the response text by removing markdown code blocks if present
+    let cleanText = textContent.text.trim();
+    
+    // Remove markdown code block markers
+    if (cleanText.startsWith('```json')) {
+      cleanText = cleanText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    } else if (cleanText.startsWith('```')) {
+      cleanText = cleanText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+    
+    try {
+      return JSON.parse(cleanText);
+    } catch (parseError) {
+      console.error('Failed to parse AI response:', cleanText);
+      throw new Error('Invalid JSON response from AI');
+    }
   } catch (error) {
     console.error('Error generating smart suggestions:', error);
     throw new Error('Failed to generate smart suggestions. Please try again.');
