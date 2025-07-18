@@ -105,10 +105,25 @@ Format the response as a numbered or organized list. Use proper medical terminol
     // Add patient context if available
     let contextualPrompt = systemPrompt;
     if (patientInfo) {
-      const { age, gender, medicalHistory, symptoms, affectedSystem } = patientInfo;
+      const { 
+        patientName, age, gender, dateOfBirth, mrn,
+        medicalHistory, symptoms, affectedSystem, allergies, currentMedications,
+        doctorName, hospitalName, department, visitDate, chiefComplaint
+      } = patientInfo;
+      
       let context = "\n\nPatient Context:\n";
+      if (patientName) context += `Patient: ${patientName}\n`;
       if (age) context += `Age: ${age}\n`;
       if (gender) context += `Gender: ${gender}\n`;
+      if (dateOfBirth) context += `DOB: ${dateOfBirth}\n`;
+      if (mrn) context += `MRN: ${mrn}\n`;
+      if (doctorName) context += `Doctor: ${doctorName}\n`;
+      if (hospitalName) context += `Hospital: ${hospitalName}\n`;
+      if (department) context += `Department: ${department}\n`;
+      if (visitDate) context += `Visit Date: ${visitDate}\n`;
+      if (chiefComplaint) context += `Chief Complaint: ${chiefComplaint}\n`;
+      if (allergies) context += `Allergies: ${allergies}\n`;
+      if (currentMedications) context += `Current Medications: ${currentMedications}\n`;
       if (medicalHistory) context += `Medical History: ${medicalHistory}\n`;
       if (symptoms?.length) context += `Symptoms: ${symptoms.join(", ")}\n`;
       if (affectedSystem) context += `Affected System: ${affectedSystem}\n`;

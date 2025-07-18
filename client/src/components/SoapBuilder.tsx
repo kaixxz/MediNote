@@ -531,83 +531,245 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                 </SheetHeader>
                 
                 <div className="flex-1 overflow-y-auto space-y-8 mt-6 pb-6">
-                  {/* Patient Info */}
+                  {/* Patient Demographics */}
                   <div className="space-y-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-xl p-6 border border-blue-500/20">
                     <h3 className="font-semibold flex items-center gap-2 text-blue-300">
                       <User className="w-5 h-5 animate-pulse" />
-                      Patient Information
+                      Patient Demographics
                     </h3>
                     
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-4">
                       <div>
-                        <Label htmlFor="age">Age</Label>
+                        <Label htmlFor="patientName">Patient Name</Label>
                         <Input
-                          id="age"
-                          type="number"
-                          value={patientInfo.age || ""}
+                          id="patientName"
+                          value={patientInfo.patientName || ""}
                           onChange={(e) => setPatientInfo(prev => ({ 
                             ...prev, 
-                            age: e.target.value ? parseInt(e.target.value) : undefined 
+                            patientName: e.target.value 
                           }))}
-                          placeholder="Age"
+                          placeholder="John Doe"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="age">Age</Label>
+                          <Input
+                            id="age"
+                            type="number"
+                            value={patientInfo.age || ""}
+                            onChange={(e) => setPatientInfo(prev => ({ 
+                              ...prev, 
+                              age: e.target.value ? parseInt(e.target.value) : undefined 
+                            }))}
+                            placeholder="Age"
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="gender">Gender</Label>
+                          <Select value={patientInfo.gender} onValueChange={(value) => 
+                            setPatientInfo(prev => ({ ...prev, gender: value }))
+                          }>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select gender" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                          <Input
+                            id="dateOfBirth"
+                            type="date"
+                            value={patientInfo.dateOfBirth || ""}
+                            onChange={(e) => setPatientInfo(prev => ({ 
+                              ...prev, 
+                              dateOfBirth: e.target.value 
+                            }))}
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="mrn">MRN</Label>
+                          <Input
+                            id="mrn"
+                            value={patientInfo.mrn || ""}
+                            onChange={(e) => setPatientInfo(prev => ({ 
+                              ...prev, 
+                              mrn: e.target.value 
+                            }))}
+                            placeholder="Medical Record #"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator className="bg-blue-500/20" />
+                  
+                  {/* Healthcare Provider Info */}
+                  <div className="space-y-4 bg-gradient-to-r from-emerald-900/20 to-teal-900/20 rounded-xl p-6 border border-emerald-500/20">
+                    <h3 className="font-semibold flex items-center gap-2 text-emerald-300">
+                      <Settings className="w-5 h-5 animate-pulse" />
+                      Healthcare Provider
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="doctorName">Doctor Name</Label>
+                        <Input
+                          id="doctorName"
+                          value={patientInfo.doctorName || ""}
+                          onChange={(e) => setPatientInfo(prev => ({ 
+                            ...prev, 
+                            doctorName: e.target.value 
+                          }))}
+                          placeholder="Dr. John Smith, MD"
                         />
                       </div>
                       
                       <div>
-                        <Label htmlFor="gender">Gender</Label>
-                        <Select value={patientInfo.gender} onValueChange={(value) => 
-                          setPatientInfo(prev => ({ ...prev, gender: value }))
+                        <Label htmlFor="hospitalName">Hospital/Clinic Name</Label>
+                        <Input
+                          id="hospitalName"
+                          value={patientInfo.hospitalName || ""}
+                          onChange={(e) => setPatientInfo(prev => ({ 
+                            ...prev, 
+                            hospitalName: e.target.value 
+                          }))}
+                          placeholder="General Hospital"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="department">Department</Label>
+                          <Input
+                            id="department"
+                            value={patientInfo.department || ""}
+                            onChange={(e) => setPatientInfo(prev => ({ 
+                              ...prev, 
+                              department: e.target.value 
+                            }))}
+                            placeholder="Internal Medicine"
+                          />
+                        </div>
+                        
+                        <div>
+                          <Label htmlFor="visitDate">Visit Date</Label>
+                          <Input
+                            id="visitDate"
+                            type="date"
+                            value={patientInfo.visitDate || ""}
+                            onChange={(e) => setPatientInfo(prev => ({ 
+                              ...prev, 
+                              visitDate: e.target.value 
+                            }))}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <Separator className="bg-blue-500/20" />
+                  
+                  {/* Medical Information */}
+                  <div className="space-y-4 bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-xl p-6 border border-purple-500/20">
+                    <h3 className="font-semibold flex items-center gap-2 text-purple-300">
+                      <AlertTriangle className="w-5 h-5 animate-pulse" />
+                      Medical Information
+                    </h3>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="chiefComplaint">Chief Complaint</Label>
+                        <Input
+                          id="chiefComplaint"
+                          value={patientInfo.chiefComplaint || ""}
+                          onChange={(e) => setPatientInfo(prev => ({ 
+                            ...prev, 
+                            chiefComplaint: e.target.value 
+                          }))}
+                          placeholder="Main reason for visit..."
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="system">Affected System</Label>
+                        <Select value={patientInfo.affectedSystem} onValueChange={(value) => 
+                          setPatientInfo(prev => ({ ...prev, affectedSystem: value }))
                         }>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select gender" />
+                            <SelectValue placeholder="Select affected system" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="male">Male</SelectItem>
-                            <SelectItem value="female">Female</SelectItem>
-                            <SelectItem value="other">Other</SelectItem>
+                            {affectedSystems.map(system => (
+                              <SelectItem key={system} value={system.toLowerCase()}>
+                                {system}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </div>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="system">Affected System</Label>
-                      <Select value={patientInfo.affectedSystem} onValueChange={(value) => 
-                        setPatientInfo(prev => ({ ...prev, affectedSystem: value }))
-                      }>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select affected system" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {affectedSystems.map(system => (
-                            <SelectItem key={system} value={system.toLowerCase()}>
-                              {system}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="history">Medical History</Label>
-                      <Textarea
-                        id="history"
-                        value={patientInfo.medicalHistory || ""}
-                        onChange={(e) => setPatientInfo(prev => ({ 
-                          ...prev, 
-                          medicalHistory: e.target.value 
-                        }))}
-                        placeholder="Relevant medical history..."
-                        rows={3}
-                      />
+                      
+                      <div>
+                        <Label htmlFor="allergies">Allergies</Label>
+                        <Textarea
+                          id="allergies"
+                          value={patientInfo.allergies || ""}
+                          onChange={(e) => setPatientInfo(prev => ({ 
+                            ...prev, 
+                            allergies: e.target.value 
+                          }))}
+                          placeholder="Known allergies and reactions..."
+                          rows={2}
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="currentMedications">Current Medications</Label>
+                        <Textarea
+                          id="currentMedications"
+                          value={patientInfo.currentMedications || ""}
+                          onChange={(e) => setPatientInfo(prev => ({ 
+                            ...prev, 
+                            currentMedications: e.target.value 
+                          }))}
+                          placeholder="Current medications and dosages..."
+                          rows={2}
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="history">Medical History</Label>
+                        <Textarea
+                          id="history"
+                          value={patientInfo.medicalHistory || ""}
+                          onChange={(e) => setPatientInfo(prev => ({ 
+                            ...prev, 
+                            medicalHistory: e.target.value 
+                          }))}
+                          placeholder="Relevant medical history..."
+                          rows={3}
+                        />
+                      </div>
                     </div>
                   </div>
                   
                   <Separator className="bg-blue-500/20" />
                   
                   {/* Symptoms */}
-                  <div className="space-y-4 bg-gradient-to-r from-purple-900/20 to-pink-900/20 rounded-xl p-6 border border-purple-500/20">
-                    <h3 className="font-semibold flex items-center gap-2 text-purple-300">
+                  <div className="space-y-4 bg-gradient-to-r from-orange-900/20 to-red-900/20 rounded-xl p-6 border border-orange-500/20">
+                    <h3 className="font-semibold flex items-center gap-2 text-orange-300">
                       <Zap className="w-5 h-5 animate-pulse" />
                       Common Symptoms
                     </h3>
@@ -640,8 +802,8 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                   <Separator className="bg-blue-500/20" />
                   
                   {/* Load Previous Drafts */}
-                  <div className="space-y-4 bg-gradient-to-r from-emerald-900/20 to-teal-900/20 rounded-xl p-6 border border-emerald-500/20">
-                    <h3 className="font-semibold flex items-center gap-2 text-emerald-300">
+                  <div className="space-y-4 bg-gradient-to-r from-slate-900/20 to-gray-900/20 rounded-xl p-6 border border-slate-500/20">
+                    <h3 className="font-semibold flex items-center gap-2 text-slate-300">
                       <FileText className="w-5 h-5 animate-pulse" />
                       Previous Drafts
                     </h3>

@@ -10,11 +10,28 @@ export const users = pgTable("users", {
 
 // Patient info type
 export type PatientInfo = {
+  // Patient Demographics
+  patientName?: string;
   age?: number;
   gender?: string;
+  dateOfBirth?: string;
+  mrn?: string; // Medical Record Number
+  
+  // Medical Information
   medicalHistory?: string;
   symptoms?: string[];
   affectedSystem?: string;
+  allergies?: string;
+  currentMedications?: string;
+  
+  // Healthcare Provider Info
+  doctorName?: string;
+  hospitalName?: string;
+  department?: string;
+  
+  // Visit Information
+  visitDate?: string;
+  chiefComplaint?: string;
 };
 
 // Updated SOAP drafts table for structured reports
@@ -45,11 +62,28 @@ export const reports = pgTable("reports", {
 // SOAP section generation schemas
 // Patient info schema
 export const patientInfoSchema = z.object({
+  // Patient Demographics
+  patientName: z.string().optional(),
   age: z.number().optional(),
   gender: z.string().optional(),
+  dateOfBirth: z.string().optional(),
+  mrn: z.string().optional(),
+  
+  // Medical Information
   medicalHistory: z.string().optional(),
   symptoms: z.array(z.string()).optional(),
   affectedSystem: z.string().optional(),
+  allergies: z.string().optional(),
+  currentMedications: z.string().optional(),
+  
+  // Healthcare Provider Info
+  doctorName: z.string().optional(),
+  hospitalName: z.string().optional(),
+  department: z.string().optional(),
+  
+  // Visit Information
+  visitDate: z.string().optional(),
+  chiefComplaint: z.string().optional(),
 });
 
 export const generateSectionSchema = z.object({

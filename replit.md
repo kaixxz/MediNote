@@ -158,6 +158,16 @@ The application is designed to be easily deployable to platforms like Replit, wi
 - Unified emerald/teal color scheme throughout for medical branding
 - Fixed demo SOAP note formatting with proper line breaks and structure
 
+### July 18, 2025 - Migration and UI Fixes
+- **Migration to Replit**: Successfully migrated project from Replit Agent to standard Replit environment
+- **Database Setup**: Configured PostgreSQL database and completed schema migrations
+- **Assistant Panel Fixes**: Fixed scrolling issues in Dr. MediAI assistant panel after saving drafts
+- **Enhanced Patient Information**: Added comprehensive patient demographics, healthcare provider info, and medical details
+- **Improved AI Review**: Enhanced review system to check for essential medical elements like vital signs, allergies, medications
+- **Fixed Export Dialog**: Corrected positioning of copy/download popup that was stuck at top of screen
+- **New Patient Fields**: Added patient name, DOB, MRN, doctor name, hospital name, department, chief complaint, allergies, current medications
+- **Better Organization**: Reorganized assistant panel with color-coded sections for better user experience
+
 ### July 18, 2025 - Migration & UI Fixes
 - Successfully migrated project from Replit Agent to standard Replit environment
 - Fixed Dr. MediAI assistant panel scrolling issues after draft saving
