@@ -1050,7 +1050,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
 
         {/* AI Review Sidebar */}
         <Dialog open={showReview} onOpenChange={setShowReview}>
-          <DialogContent className="max-w-6xl max-h-[90vh] p-0 fixed top-[5vh] left-1/2 transform -translate-x-1/2 z-[100]">
+          <DialogContent className="max-w-6xl max-h-[90vh] p-0 fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[100]">
             <div className="flex h-[80vh] overflow-hidden">
               {/* Report Content */}
               <div className="flex-1 p-6 overflow-y-auto">
