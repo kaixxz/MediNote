@@ -25,13 +25,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <div className="relative min-h-screen">
-          <Router />
-          <Toaster 
-            position="bottom-left" 
-            className="fixed bottom-4 left-4 z-50 max-w-md"
-          />
-        </div>
+        <Toaster />
+        <Router />
       </TooltipProvider>
     </QueryClientProvider>
   );

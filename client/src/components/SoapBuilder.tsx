@@ -319,9 +319,6 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
       setSelectedSymptoms(draft.patientInfo.symptoms);
     }
     
-    // Ensure drafts section stays visible after loading
-    queryClient.invalidateQueries({ queryKey: ["/api/drafts"] });
-    
     toast({
       title: "Draft Loaded",
       description: `Loaded "${draft.title}" successfully.`
@@ -442,18 +439,15 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
             {/* Patient Assistant Sheet */}
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="outline" className="group hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 hover:text-white transition-all duration-300">
-                  <Settings className="w-4 h-4 mr-2 group-hover:rotate-90 transition-transform duration-300" />
-                  Dr. Nova AI
+                <Button variant="outline">
+                  <Settings className="w-4 h-4 mr-2" />
+                  Assistant
                 </Button>
               </SheetTrigger>
-              <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-l-2 border-blue-500/30">
-                <SheetHeader className="pb-6 border-b border-gray-700">
-                  <SheetTitle className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-2">
-                    <Star className="w-5 h-5 text-blue-400" />
-                    Dr. Nova AI Assistant
-                  </SheetTitle>
-                  <SheetDescription className="text-gray-300">
+              <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>Input Assistant</SheetTitle>
+                  <SheetDescription>
                     Configure patient information and symptoms to enhance AI generation
                   </SheetDescription>
                 </SheetHeader>
@@ -466,50 +460,35 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                       Patient Information
                     </h3>
                     
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label htmlFor="patientName">Patient Name</Label>
+                        <Label htmlFor="age">Age</Label>
                         <Input
-                          id="patientName"
-                          value={patientInfo.name || ""}
+                          id="age"
+                          type="number"
+                          value={patientInfo.age || ""}
                           onChange={(e) => setPatientInfo(prev => ({ 
                             ...prev, 
-                            name: e.target.value 
+                            age: e.target.value ? parseInt(e.target.value) : undefined 
                           }))}
-                          placeholder="Enter patient name"
+                          placeholder="Age"
                         />
                       </div>
                       
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor="age">Age</Label>
-                          <Input
-                            id="age"
-                            type="number"
-                            value={patientInfo.age || ""}
-                            onChange={(e) => setPatientInfo(prev => ({ 
-                              ...prev, 
-                              age: e.target.value ? parseInt(e.target.value) : undefined 
-                            }))}
-                            placeholder="Age"
-                          />
-                        </div>
-                        
-                        <div>
-                          <Label htmlFor="gender">Gender</Label>
-                          <Select value={patientInfo.gender} onValueChange={(value) => 
-                            setPatientInfo(prev => ({ ...prev, gender: value }))
-                          }>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select gender" />
-                            </SelectTrigger>
+                      <div>
+                        <Label htmlFor="gender">Gender</Label>
+                        <Select value={patientInfo.gender} onValueChange={(value) => 
+                          setPatientInfo(prev => ({ ...prev, gender: value }))
+                        }>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select gender" />
+                          </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="male">Male</SelectItem>
                             <SelectItem value="female">Female</SelectItem>
                             <SelectItem value="other">Other</SelectItem>
                           </SelectContent>
                         </Select>
-                        </div>
                       </div>
                     </div>
                     
@@ -581,35 +560,23 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                   
                   {/* Load Previous Drafts */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold flex items-center gap-2">
-                      <FileText className="w-4 h-4" />
-                      Load Previous Drafts
-                    </h3>
+                    <h3 className="font-semibold">Load Previous Drafts</h3>
                     {drafts && drafts.length > 0 ? (
-                      <div className="space-y-2 max-h-64 overflow-y-auto custom-scrollbar pb-4">
-                        {drafts.filter((draft: SoapDraft) => draft.title !== "Test Draft" && draft.title !== "Test Draft with Assistant Data").map((draft: SoapDraft) => (
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {drafts.map((draft: SoapDraft) => (
                           <Button
                             key={draft.id}
                             variant="ghost"
-                            className="w-full justify-start text-left p-3 hover:bg-gradient-to-r hover:from-blue-500/20 hover:to-purple-500/20 border border-gray-700 hover:border-blue-500/50 transition-all duration-300"
+                            className="w-full justify-start text-left"
                             onClick={() => handleLoadDraft(draft)}
                           >
-                            <FileText className="w-4 h-4 mr-3 flex-shrink-0 text-blue-400" />
-                            <div className="flex-1 min-w-0">
-                              <div className="truncate font-medium">{draft.title}</div>
-                              <div className="text-xs text-gray-400 mt-1">
-                                {new Date(draft.updatedAt).toLocaleDateString()}
-                              </div>
-                            </div>
+                            <FileText className="w-4 h-4 mr-2 flex-shrink-0" />
+                            <span className="truncate">{draft.title}</span>
                           </Button>
                         ))}
                       </div>
                     ) : (
-                      <div className="text-center py-8 text-gray-500">
-                        <FileText className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                        <p className="text-sm">No saved drafts yet</p>
-                        <p className="text-xs mt-1">Create your first draft to get started</p>
-                      </div>
+                      <p className="text-sm text-gray-500">No saved drafts yet</p>
                     )}
                   </div>
                 </div>
@@ -676,22 +643,15 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                       <Button
                         onClick={() => handleGenerateSection(section.key)}
                         disabled={isGenerating || !sectionContent[section.key].trim()}
-                        className={`relative bg-gradient-to-r ${config.gradientFrom} ${config.gradientTo} hover:from-purple-500 hover:to-pink-500 text-white shadow-2xl shadow-purple-900/50 hover:shadow-purple-900/70 transition-all duration-500 transform hover:scale-105 border border-purple-500/30 overflow-hidden group min-w-[160px] h-12`}
+                        className={`bg-gradient-to-r ${config.gradientFrom} ${config.gradientTo} hover:from-emerald-500 hover:to-teal-500 text-white shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-500 transform hover:scale-105 border border-emerald-500/30 relative overflow-hidden group`}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-pink-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-purple-400 opacity-0 group-hover:opacity-10 animate-pulse"></div>
-                        
                         {isGenerating ? (
-                          <div className="flex items-center justify-center w-full relative z-10">
-                            <Loader2 className="w-5 h-5 animate-spin mr-2" />
-                            <span className="text-sm font-medium">Generating...</span>
-                          </div>
+                          <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         ) : (
-                          <div className="flex items-center justify-center w-full relative z-10">
-                            <Sparkles className="w-5 h-5 mr-2 group-hover:animate-spin transition-transform duration-300" />
-                            <span className="text-sm font-medium">Generate with AI</span>
-                          </div>
+                          <Sparkles className="w-4 h-4 mr-2" />
                         )}
+                        <span className="relative z-10">Generate with AI</span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
                       </Button>
                     </div>
                   </CardContent>
