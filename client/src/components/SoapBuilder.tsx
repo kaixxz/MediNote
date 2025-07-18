@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import CreditDisplay from "@/components/CreditDisplay";
+
 import jsPDF from "jspdf";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 
@@ -780,7 +780,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
         </div>
           
           <div className="flex items-center gap-4 mt-4 lg:mt-0">
-            <CreditDisplay className="hidden md:flex" />
+
             <Input 
               value={draftTitle}
               onChange={(e) => setDraftTitle(e.target.value)}
