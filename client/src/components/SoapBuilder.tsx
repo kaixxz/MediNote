@@ -7,6 +7,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import jsPDF from "jspdf";
+import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 
 interface SoapBuilderProps {
   reportType?: "soap" | "progress" | "discharge";
@@ -409,6 +411,180 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
         description: "Your report has been copied to clipboard."
       });
     });
+  };
+
+  const handleDownloadPDF = () => {
+    const { subjective, objective, assessment, plan } = sectionContent;
+    const pdf = new jsPDF();
+    
+    // Add title
+    pdf.setFontSize(20);
+    pdf.text("Medical Documentation Report", 20, 30);
+    
+    // Add patient info if available
+    if (patientInfo.patientName) {
+      pdf.setFontSize(12);
+      pdf.text(`Patient: ${patientInfo.patientName}`, 20, 50);
+      if (patientInfo.mrn) {
+        pdf.text(`MRN: ${patientInfo.mrn}`, 20, 60);
+      }
+      if (patientInfo.doctorName) {
+        pdf.text(`Doctor: ${patientInfo.doctorName}`, 20, 70);
+      }
+    }
+    
+    let yPosition = patientInfo.patientName ? 90 : 50;
+    
+    // Add sections
+    const sections = [
+      { title: "SUBJECTIVE", content: subjective },
+      { title: "OBJECTIVE", content: objective },
+      { title: "ASSESSMENT", content: assessment },
+      { title: "PLAN", content: plan }
+    ];
+    
+    sections.forEach(section => {
+      pdf.setFontSize(14);
+      pdf.text(section.title, 20, yPosition);
+      yPosition += 10;
+      
+      pdf.setFontSize(11);
+      const lines = pdf.splitTextToSize(section.content, 170);
+      pdf.text(lines, 20, yPosition);
+      yPosition += lines.length * 5 + 10;
+      
+      // Add new page if needed
+      if (yPosition > 250) {
+        pdf.addPage();
+        yPosition = 20;
+      }
+    });
+    
+    // Save the PDF
+    const fileName = `medical-report-${new Date().toISOString().split('T')[0]}.pdf`;
+    pdf.save(fileName);
+    
+    toast({
+      title: "PDF Downloaded",
+      description: "Your medical report has been saved as a PDF."
+    });
+  };
+
+  const handleDownloadDOCX = async () => {
+    const { subjective, objective, assessment, plan } = sectionContent;
+    
+    const doc = new Document({
+      sections: [{
+        properties: {},
+        children: [
+          new Paragraph({
+            text: "Medical Documentation Report",
+            heading: HeadingLevel.HEADING_1,
+          }),
+          ...(patientInfo.patientName ? [
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Patient: ${patientInfo.patientName}`,
+                  bold: true,
+                }),
+              ],
+            }),
+            ...(patientInfo.mrn ? [new Paragraph({
+              children: [
+                new TextRun({
+                  text: `MRN: ${patientInfo.mrn}`,
+                  bold: true,
+                }),
+              ],
+            })] : []),
+            ...(patientInfo.doctorName ? [new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Doctor: ${patientInfo.doctorName}`,
+                  bold: true,
+                }),
+              ],
+            })] : []),
+            new Paragraph({ text: "" }), // Empty line
+          ] : []),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "SUBJECTIVE",
+                bold: true,
+                size: 28,
+              }),
+            ],
+          }),
+          new Paragraph({
+            text: subjective,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "OBJECTIVE",
+                bold: true,
+                size: 28,
+              }),
+            ],
+          }),
+          new Paragraph({
+            text: objective,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "ASSESSMENT",
+                bold: true,
+                size: 28,
+              }),
+            ],
+          }),
+          new Paragraph({
+            text: assessment,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({
+                text: "PLAN",
+                bold: true,
+                size: 28,
+              }),
+            ],
+          }),
+          new Paragraph({
+            text: plan,
+          }),
+        ],
+      }],
+    });
+
+    try {
+      const blob = await Packer.toBlob(doc);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `medical-report-${new Date().toISOString().split('T')[0]}.docx`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      
+      toast({
+        title: "DOCX Downloaded",
+        description: "Your medical report has been saved as a Word document."
+      });
+    } catch (error) {
+      toast({
+        title: "Download Failed",
+        description: "Failed to create DOCX file. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const toggleSection = (section: string) => {
@@ -1250,18 +1426,24 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                 <Button
                   variant="outline"
                   className="h-20 flex flex-col gap-2 hover:bg-red-50"
-                  onClick={() => setExportFormat("pdf")}
+                  onClick={() => {
+                    handleDownloadPDF();
+                    setShowExport(false);
+                  }}
                 >
-                  <FileText className="w-8 h-8 text-red-600" />
-                  <span>PDF</span>
+                  <Download className="w-8 h-8 text-red-600" />
+                  <span>Download PDF</span>
                 </Button>
                 <Button
                   variant="outline"
                   className="h-20 flex flex-col gap-2 hover:bg-blue-50"
-                  onClick={() => setExportFormat("docx")}
+                  onClick={() => {
+                    handleDownloadDOCX();
+                    setShowExport(false);
+                  }}
                 >
-                  <FileText className="w-8 h-8 text-blue-600" />
-                  <span>DOC/DOCX</span>
+                  <Download className="w-8 h-8 text-blue-600" />
+                  <span>Download DOCX</span>
                 </Button>
               </div>
               <div className="flex justify-center">
