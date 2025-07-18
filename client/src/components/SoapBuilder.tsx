@@ -427,20 +427,26 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
         symptoms: newSymptoms
       }));
       
-      // Auto-fill relevant fields when symptom is selected
-      if (!prev.includes(symptom)) {
-        autoFillFromSymptom(symptom);
-      }
-      
       return newSymptoms;
     });
   };
 
-  // Smart auto-fill function that uses AI to populate relevant fields
-  const autoFillFromSymptom = async (symptom: string) => {
+  // Smart auto-fill function that uses AI to populate relevant fields based on selected symptoms
+  const handleAutoFill = async () => {
+    if (selectedSymptoms.length === 0) {
+      toast({
+        title: "No Symptoms Selected",
+        description: "Please select at least one symptom to auto-fill",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsAutoFilling(true);
     try {
-      const suggestions = await getSmartSuggestions(symptom);
+      // Use the first selected symptom for suggestions
+      const primarySymptom = selectedSymptoms[0];
+      const suggestions = await getSmartSuggestions(primarySymptom);
       
       let fieldsUpdated = [];
       
@@ -473,13 +479,21 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
       
       if (fieldsUpdated.length > 0) {
         toast({
-          title: "🤖 Smart Auto-Fill Active",
-          description: `Updated: ${fieldsUpdated.join(", ")} based on "${symptom}"`,
+          title: "AI Auto-Fill Complete",
+          description: `Updated: ${fieldsUpdated.join(", ")} based on "${primarySymptom}"`,
+        });
+      } else {
+        toast({
+          title: "No Updates Needed",
+          description: "All relevant fields are already filled",
         });
       }
     } catch (error) {
-      // Silently fail - don't show error for this enhancement feature
-      console.log("Auto-fill enhancement skipped");
+      toast({
+        title: "Auto-Fill Failed",
+        description: "Unable to generate suggestions. Please try again.",
+        variant: "destructive"
+      });
     } finally {
       setIsAutoFilling(false);
     }
@@ -489,11 +503,11 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
   const getSmartSuggestions = async (symptom: string) => {
     const response = await apiRequest("/api/smart-suggestions", {
       method: "POST",
-      body: JSON.stringify({ 
+      body: { 
         symptom,
         currentInfo: patientInfo,
         reportType
-      })
+      }
     });
     return response;
   };
@@ -870,12 +884,32 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                     )}
                     
                     {selectedSymptoms.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-4">
-                        {selectedSymptoms.map(symptom => (
-                          <Badge key={symptom} variant="secondary">
-                            {symptom}
-                          </Badge>
-                        ))}
+                      <div className="space-y-3 mt-4">
+                        <div className="flex flex-wrap gap-2">
+                          {selectedSymptoms.map(symptom => (
+                            <Badge key={symptom} variant="secondary">
+                              {symptom}
+                            </Badge>
+                          ))}
+                        </div>
+                        
+                        <Button 
+                          onClick={handleAutoFill}
+                          disabled={isAutoFilling}
+                          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0"
+                        >
+                          {isAutoFilling ? (
+                            <>
+                              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              AI Auto-Filling...
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-4 h-4 mr-2" />
+                              Smart Auto-Fill Fields
+                            </>
+                          )}
+                        </Button>
                       </div>
                     )}
                   </div>
