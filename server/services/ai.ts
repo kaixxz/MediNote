@@ -165,33 +165,41 @@ Format the response as a numbered or organized list. Use proper medical terminol
 
 export async function reviewSoapReport(subjective: string, objective: string, assessment: string, plan: string): Promise<any> {
   try {
-    const systemPrompt = `You are a senior physician reviewing a SOAP note for quality and completeness. Analyze each section and provide specific feedback with a focus on essential medical elements.
+    const systemPrompt = `You are a senior physician reviewing a SOAP note for quality and completeness. Provide feedback in a structured format that highlights both completed elements and areas for improvement.
 
-For each section, identify:
-1. Missing vital signs or physical examination findings
-2. Vague language that should be more specific
-3. Missing clinical reasoning or details
-4. Suggestions for stronger clinical phrasing
-5. Essential medical documentation elements that should be included
+Analyze the documentation and categorize your findings:
 
-CRITICAL ITEMS TO CHECK FOR:
-- SUBJECTIVE: Chief complaint, HPI, PMH, medications, allergies, social history
-- OBJECTIVE: Vital signs (BP, HR, RR, Temp, O2 sat), physical exam by systems, labs/imaging if relevant
-- ASSESSMENT: Primary diagnosis with ICD-10 considerations, differential diagnoses, clinical reasoning
-- PLAN: Specific treatments, medications with dosages, follow-up instructions, patient education, return precautions
-
-Return your analysis as a JSON object with this structure:
+Return your analysis as a JSON object with this exact structure:
 {
+  "completedItems": [
+    "Medical terminology accurate",
+    "Documentation complete",
+    "Professional formatting"
+  ],
   "suggestions": [
-    {
-      "section": "subjective|objective|assessment|plan",
-      "issues": ["list of identified issues including missing vital elements"],
-      "suggestions": ["list of specific improvements including essential medical items to add"]
-    }
+    "Consider adding vital signs",
+    "Include specific medication dosages",
+    "Add follow-up timeline"
   ]
 }
 
-Focus on clinical accuracy, completeness, and professional documentation standards. Always suggest including vital signs if missing from objective section.`;
+COMPLETED ITEMS should include things that are done well:
+- Accurate medical terminology
+- Complete documentation sections
+- Professional formatting
+- Logical clinical reasoning
+- Appropriate differential diagnoses
+
+SUGGESTIONS should focus on improvements:
+- Missing vital signs (BP, HR, RR, Temp, O2 sat)
+- Vague symptoms that need specificity
+- Missing medication dosages or frequencies
+- Incomplete physical examination findings
+- Missing follow-up instructions
+- Absent patient education components
+- Missing allergies or medical history
+
+Keep all items concise and actionable. Limit each array to 3-5 items maximum.`;
 
     const fullReport = `SUBJECTIVE:\n${subjective}\n\nOBJECTIVE:\n${objective}\n\nASSESSMENT:\n${assessment}\n\nPLAN:\n${plan}`;
 
@@ -221,7 +229,22 @@ Focus on clinical accuracy, completeness, and professional documentation standar
       throw new Error('No text content in AI response');
     }
 
-    return JSON.parse(textContent.text);
+    // Clean the response text by removing markdown code blocks if present
+    let cleanText = textContent.text.trim();
+    
+    // Remove markdown code block markers
+    if (cleanText.startsWith('```json')) {
+      cleanText = cleanText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+    } else if (cleanText.startsWith('```')) {
+      cleanText = cleanText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+    }
+    
+    try {
+      return JSON.parse(cleanText);
+    } catch (parseError) {
+      console.error('Failed to parse AI review response:', cleanText);
+      throw new Error('Invalid JSON response from AI review');
+    }
   } catch (error) {
     console.error('Error reviewing SOAP report:', error);
     throw new Error('Failed to review SOAP report. Please try again.');

@@ -1075,77 +1075,37 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                     <h3 className="text-xl font-bold text-white">Review Complete</h3>
                   </div>
                   
-                  {reviewData && reviewData.suggestions && (
+                  {reviewData && (
                     <div className="space-y-4">
-                      {/* Success Items */}
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-green-400">
-                          <CheckCircle className="w-4 h-4" />
-                          <span className="text-sm font-medium">Medical terminology reviewed</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-green-400">
-                          <CheckCircle className="w-4 h-4" />
-                          <span className="text-sm font-medium">Clinical elements analyzed</span>
-                        </div>
-                      </div>
-                      
-                      {/* Medical Documentation Checklist */}
-                      <div className="bg-blue-900/30 rounded-lg p-4 border border-blue-500/30 mt-4">
-                        <h4 className="text-sm font-semibold text-blue-300 mb-3 flex items-center gap-2">
-                          <AlertTriangle className="w-4 h-4" />
-                          Essential Elements Checklist
-                        </h4>
-                        <div className="space-y-2 text-xs">
-                          <div className="text-yellow-300">• Vital Signs (BP, HR, RR, Temp, O2 sat)</div>
-                          <div className="text-yellow-300">• Physical Examination Findings</div>
-                          <div className="text-yellow-300">• Chief Complaint & HPI</div>
-                          <div className="text-yellow-300">• Medications & Allergies</div>
-                          <div className="text-yellow-300">• Primary Diagnosis with ICD-10</div>
-                          <div className="text-yellow-300">• Follow-up Instructions</div>
-                          <div className="text-yellow-300">• Return Precautions</div>
-                        </div>
-                      </div>
-                      
-                      {/* Warnings/Suggestions */}
-                      {reviewData.suggestions.length > 0 && (
-                        <div className="space-y-3 mt-6">
-                          {reviewData.suggestions.map((suggestion: any, index: number) => (
-                            <div key={index} className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
-                              <div className="flex items-center gap-2 mb-2">
-                                <AlertTriangle className="w-4 h-4 text-yellow-400" />
-                                <span className="text-sm font-medium text-yellow-300 capitalize">
-                                  {suggestion.section} Section
-                                </span>
-                              </div>
-                              
-                              {suggestion.issues.length > 0 && (
-                                <div className="mb-3">
-                                  <ul className="text-xs text-gray-300 space-y-1">
-                                    {suggestion.issues.map((issue: string, i: number) => (
-                                      <li key={i} className="flex items-start gap-2">
-                                        <span className="text-yellow-400 mt-1">•</span>
-                                        <span>{issue}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                              
-                              {suggestion.suggestions.length > 0 && (
-                                <div>
-                                  <h5 className="text-xs font-medium text-green-400 mb-1">Suggestions:</h5>
-                                  <ul className="text-xs text-gray-300 space-y-1">
-                                    {suggestion.suggestions.map((sug: string, i: number) => (
-                                      <li key={i} className="flex items-start gap-2">
-                                        <span className="text-green-400 mt-1">•</span>
-                                        <span>{sug}</span>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
+                      {/* Completed Items */}
+                      {reviewData.completedItems?.length > 0 && (
+                        <div className="space-y-3">
+                          {reviewData.completedItems.map((item: string, index: number) => (
+                            <div key={index} className="flex items-center gap-3 text-green-400">
+                              <CheckCircle className="w-5 h-5 flex-shrink-0" />
+                              <span className="text-sm">{item}</span>
                             </div>
                           ))}
+                        </div>
+                      )}
+                      
+                      {/* Suggestions */}
+                      {reviewData.suggestions?.length > 0 && (
+                        <div className="space-y-3 mt-6">
+                          {reviewData.suggestions.map((suggestion: string, index: number) => (
+                            <div key={index} className="flex items-center gap-3 text-amber-400">
+                              <AlertTriangle className="w-5 h-5 flex-shrink-0" />
+                              <span className="text-sm">{suggestion}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      
+                      {/* Empty state */}
+                      {(!reviewData.completedItems?.length && !reviewData.suggestions?.length) && (
+                        <div className="text-center py-8 text-gray-400">
+                          <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                          <p className="text-sm">Unable to analyze documentation. Please try again.</p>
                         </div>
                       )}
                     </div>
