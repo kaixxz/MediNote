@@ -6,6 +6,10 @@ export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  credits: integer("credits").default(3).notNull(), // Free credits for new users
+  totalCreditsUsed: integer("total_credits_used").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  lastCreditPurchase: timestamp("last_credit_purchase"),
 });
 
 // Patient info type
@@ -46,6 +50,26 @@ export const soapDrafts = pgTable("soap_drafts", {
   completedSections: json("completed_sections").$type<string[]>().default([]),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Credit transactions table
+export const creditTransactions = pgTable("credit_transactions", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  type: text("type").notNull(), // 'purchase', 'usage', 'refund'
+  amount: integer("amount").notNull(), // positive for purchase/refund, negative for usage
+  description: text("description").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Credit packages table
+export const creditPackages = pgTable("credit_packages", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  credits: integer("credits").notNull(),
+  price: integer("price").notNull(), // in cents
+  popular: integer("popular").default(0).notNull(), // 1 for popular, 0 for regular
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 
@@ -149,6 +173,11 @@ export type GenerateSectionRequest = z.infer<typeof generateSectionSchema>;
 export type ReviewReportRequest = z.infer<typeof reviewReportSchema>;
 export type SaveDraftRequest = z.infer<typeof saveDraftSchema>;
 
+export type CreditTransaction = typeof creditTransactions.$inferSelect;
+export type InsertCreditTransaction = typeof creditTransactions.$inferInsert;
+export type CreditPackage = typeof creditPackages.$inferSelect;
+export type InsertCreditPackage = typeof creditPackages.$inferInsert;
+
 export type GenerateSectionResponse = {
   content: string;
 };
@@ -159,4 +188,9 @@ export type ReviewReportResponse = {
     issues: string[];
     suggestions: string[];
   }[];
+};
+
+export type UserCreditsResponse = {
+  credits: number;
+  totalCreditsUsed: number;
 };

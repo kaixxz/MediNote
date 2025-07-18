@@ -2,13 +2,18 @@ import {
   users, 
   reports, 
   soapDrafts,
+  creditTransactions,
+  creditPackages,
   type User, 
   type InsertUser, 
   type Report, 
   type InsertReport,
   type SoapDraft,
   type InsertSoapDraft,
-  type PatientInfo
+  type PatientInfo,
+  type CreditTransaction,
+  type InsertCreditTransaction,
+  type CreditPackage
 } from "@shared/schema";
 
 export interface IStorage {
@@ -24,6 +29,13 @@ export interface IStorage {
   getSoapDraft(id: number): Promise<SoapDraft | undefined>;
   getSoapDrafts(): Promise<SoapDraft[]>;
   deleteSoapDraft(id: number): Promise<void>;
+  
+  // Credit management methods
+  getUserCredits(userId: number): Promise<{ credits: number; totalCreditsUsed: number }>;
+  deductCredits(userId: number, amount: number, description: string): Promise<void>;
+  addCredits(userId: number, amount: number, description: string): Promise<void>;
+  getCreditTransactions(userId: number): Promise<CreditTransaction[]>;
+  getCreditPackages(): Promise<CreditPackage[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -55,7 +67,14 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
-    const user: User = { ...insertUser, id };
+    const user: User = { 
+      ...insertUser, 
+      id, 
+      credits: 3,
+      totalCreditsUsed: 0,
+      createdAt: new Date(),
+      lastCreditPurchase: null
+    };
     this.users.set(id, user);
     return user;
   }
@@ -133,6 +152,45 @@ export class MemStorage implements IStorage {
   async deleteSoapDraft(id: number): Promise<void> {
     this.soapDrafts.delete(id);
   }
+
+  async getUserCredits(userId: number): Promise<{ credits: number; totalCreditsUsed: number }> {
+    const user = this.users.get(userId);
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+    return { credits: user.credits, totalCreditsUsed: user.totalCreditsUsed };
+  }
+
+  async deductCredits(userId: number, amount: number, description: string): Promise<void> {
+    const user = this.users.get(userId);
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+    if (user.credits < amount) {
+      throw new Error('Insufficient credits');
+    }
+    user.credits -= amount;
+    user.totalCreditsUsed += amount;
+    this.users.set(userId, user);
+  }
+
+  async addCredits(userId: number, amount: number, description: string): Promise<void> {
+    const user = this.users.get(userId);
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+    user.credits += amount;
+    user.lastCreditPurchase = new Date();
+    this.users.set(userId, user);
+  }
+
+  async getCreditTransactions(userId: number): Promise<CreditTransaction[]> {
+    return []; // In-memory storage doesn't track transactions
+  }
+
+  async getCreditPackages(): Promise<CreditPackage[]> {
+    return []; // In-memory storage doesn't have packages
+  }
 }
 
 import { db } from "./db";
@@ -164,16 +222,30 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createSoapDraft(insertDraft: InsertSoapDraft): Promise<SoapDraft> {
-    const [draft] = await db.insert(soapDrafts).values(insertDraft).returning();
+    const [draft] = await db.insert(soapDrafts).values({
+      title: insertDraft.title,
+      patientInfo: insertDraft.patientInfo,
+      subjective: insertDraft.subjective,
+      objective: insertDraft.objective,
+      assessment: insertDraft.assessment,
+      plan: insertDraft.plan,
+      completedSections: insertDraft.completedSections
+    }).returning();
     return draft;
   }
 
   async updateSoapDraft(id: number, updateData: Partial<InsertSoapDraft>): Promise<SoapDraft> {
+    const setValues: any = { updatedAt: new Date() };
+    if (updateData.title !== undefined) setValues.title = updateData.title;
+    if (updateData.patientInfo !== undefined) setValues.patientInfo = updateData.patientInfo;
+    if (updateData.subjective !== undefined) setValues.subjective = updateData.subjective;
+    if (updateData.objective !== undefined) setValues.objective = updateData.objective;
+    if (updateData.assessment !== undefined) setValues.assessment = updateData.assessment;
+    if (updateData.plan !== undefined) setValues.plan = updateData.plan;
+    if (updateData.completedSections !== undefined) setValues.completedSections = updateData.completedSections;
+    
     const [draft] = await db.update(soapDrafts)
-      .set({
-        ...updateData,
-        updatedAt: new Date()
-      })
+      .set(setValues)
       .where(eq(soapDrafts.id, id))
       .returning();
     return draft;
@@ -190,6 +262,71 @@ export class DatabaseStorage implements IStorage {
 
   async deleteSoapDraft(id: number): Promise<void> {
     await db.delete(soapDrafts).where(eq(soapDrafts.id, id));
+  }
+
+  async getUserCredits(userId: number): Promise<{ credits: number; totalCreditsUsed: number }> {
+    const [user] = await db.select({ credits: users.credits, totalCreditsUsed: users.totalCreditsUsed })
+      .from(users)
+      .where(eq(users.id, userId));
+    
+    if (!user) {
+      throw new Error(`User with id ${userId} not found`);
+    }
+    return user;
+  }
+
+  async deductCredits(userId: number, amount: number, description: string): Promise<void> {
+    // Check if user has enough credits
+    const userCredits = await this.getUserCredits(userId);
+    if (userCredits.credits < amount) {
+      throw new Error('Insufficient credits');
+    }
+    
+    // Deduct credits from user
+    await db.update(users)
+      .set({ 
+        credits: userCredits.credits - amount,
+        totalCreditsUsed: userCredits.totalCreditsUsed + amount
+      })
+      .where(eq(users.id, userId));
+    
+    // Record transaction
+    await db.insert(creditTransactions).values({
+      userId: userId,
+      type: 'usage',
+      amount: -amount,
+      description: description
+    });
+  }
+
+  async addCredits(userId: number, amount: number, description: string): Promise<void> {
+    const userCredits = await this.getUserCredits(userId);
+    
+    // Add credits to user
+    await db.update(users)
+      .set({ 
+        credits: userCredits.credits + amount,
+        lastCreditPurchase: new Date()
+      })
+      .where(eq(users.id, userId));
+    
+    // Record transaction
+    await db.insert(creditTransactions).values({
+      userId: userId,
+      type: 'purchase',
+      amount: amount,
+      description: description
+    });
+  }
+
+  async getCreditTransactions(userId: number): Promise<CreditTransaction[]> {
+    return await db.select().from(creditTransactions)
+      .where(eq(creditTransactions.userId, userId))
+      .orderBy(creditTransactions.createdAt);
+  }
+
+  async getCreditPackages(): Promise<CreditPackage[]> {
+    return await db.select().from(creditPackages).orderBy(creditPackages.popular);
   }
 }
 

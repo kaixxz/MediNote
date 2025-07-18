@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import CreditDisplay from "@/components/CreditDisplay";
 import jsPDF from "jspdf";
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from "docx";
 
@@ -207,12 +208,26 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
         [variables.section]: data.content
       }));
       setCompletedSections(prev => [...new Set([...prev, variables.section])]);
+      
+      // Refresh credits after using one
+      queryClient.invalidateQueries({ queryKey: ["/api/credits"] });
+      
       toast({
         title: "Section Generated",
-        description: `${variables.section.charAt(0).toUpperCase() + variables.section.slice(1)} section has been generated successfully.`
+        description: `${variables.section.charAt(0).toUpperCase() + variables.section.slice(1)} section has been generated successfully. 1 credit used.`
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
+      // Check if it's a credit error
+      if (error.message?.includes("Insufficient credits")) {
+        toast({
+          title: "Not Enough Credits",
+          description: "You need more credits to generate AI content. Click 'Buy Credits' to continue.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       toast({
         title: "Generation Failed",
         description: error instanceof Error ? error.message : "Failed to generate section",
@@ -232,12 +247,26 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
     onSuccess: (data) => {
       setReviewData(data);
       setShowReview(true);
+      
+      // Refresh credits after using one
+      queryClient.invalidateQueries({ queryKey: ["/api/credits"] });
+      
       toast({
         title: "Review Complete",
-        description: "AI suggestions are ready for review."
+        description: "AI suggestions are ready for review. 1 credit used."
       });
     },
-    onError: (error) => {
+    onError: (error: any) => {
+      // Check if it's a credit error
+      if (error.message?.includes("Insufficient credits")) {
+        toast({
+          title: "Not Enough Credits",
+          description: "You need more credits to get AI review. Click 'Buy Credits' to continue.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       toast({
         title: "Review Failed",
         description: error instanceof Error ? error.message : "Failed to review report",
@@ -751,6 +780,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
         </div>
           
           <div className="flex items-center gap-4 mt-4 lg:mt-0">
+            <CreditDisplay className="hidden md:flex" />
             <Input 
               value={draftTitle}
               onChange={(e) => setDraftTitle(e.target.value)}
