@@ -10,6 +10,7 @@ export const users = pgTable("users", {
 
 // Patient info type
 export type PatientInfo = {
+  name?: string;
   age?: number;
   gender?: string;
   medicalHistory?: string;
@@ -45,6 +46,7 @@ export const reports = pgTable("reports", {
 // SOAP section generation schemas
 // Patient info schema
 export const patientInfoSchema = z.object({
+  name: z.string().optional(),
   age: z.number().optional(),
   gender: z.string().optional(),
   medicalHistory: z.string().optional(),

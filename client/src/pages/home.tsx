@@ -182,27 +182,54 @@ DISCHARGE CONDITION: Stable`
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-16">
+              {/* Enhanced Navigation Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
                 <Link href="/soap">
-                  <Button 
-                    className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white px-12 py-4 text-xl font-semibold rounded-2xl shadow-2xl shadow-emerald-900/50 hover:shadow-emerald-900/70 transition-all duration-500 transform hover:scale-105 border border-emerald-500/30 relative overflow-hidden group"
-                    onClick={() => {
-                      // Add page transition animation
-                      document.body.style.transform = 'translateY(20px)';
-                      document.body.style.opacity = '0.8';
-                      document.body.style.transition = 'all 0.3s ease-out';
-                      setTimeout(() => {
-                        document.body.style.transform = 'translateY(0)';
-                        document.body.style.opacity = '1';
-                      }, 100);
-                    }}
-                  >
-                    <span className="relative z-10 flex items-center">
-                      Try Medinote Now
-                      <ArrowRight className="w-6 h-6 ml-3 transition-transform group-hover:translate-x-1" />
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-400 opacity-0 group-hover:opacity-20 transition-opacity duration-500"></div>
-                  </Button>
+                  <Card className="group relative overflow-hidden bg-gradient-to-br from-emerald-600/20 to-teal-600/20 border-emerald-500/30 hover:border-emerald-400/50 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl hover:shadow-emerald-900/50 cursor-pointer">
+                    <CardContent className="p-8 text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
+                        <FileText className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-2">SOAP Notes</h3>
+                      <p className="text-gray-400 text-sm mb-4">Structured clinical documentation</p>
+                      <div className="flex items-center justify-center text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                        <span className="text-sm font-medium">Start Building</span>
+                        <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link href="/progress">
+                  <Card className="group relative overflow-hidden bg-gradient-to-br from-blue-600/20 to-indigo-600/20 border-blue-500/30 hover:border-blue-400/50 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl hover:shadow-blue-900/50 cursor-pointer">
+                    <CardContent className="p-8 text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
+                        <Clock className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-2">Progress Notes</h3>
+                      <p className="text-gray-400 text-sm mb-4">Patient progress tracking</p>
+                      <div className="flex items-center justify-center text-blue-400 group-hover:text-blue-300 transition-colors">
+                        <span className="text-sm font-medium">Start Building</span>
+                        <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link href="/discharge">
+                  <Card className="group relative overflow-hidden bg-gradient-to-br from-purple-600/20 to-pink-600/20 border-purple-500/30 hover:border-purple-400/50 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl hover:shadow-purple-900/50 cursor-pointer">
+                    <CardContent className="p-8 text-center">
+                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-6 transition-transform duration-300">
+                        <CheckCircle className="w-8 h-8 text-white" />
+                      </div>
+                      <h3 className="text-xl font-bold text-white mb-2">Discharge Summary</h3>
+                      <p className="text-gray-400 text-sm mb-4">Complete hospital summaries</p>
+                      <div className="flex items-center justify-center text-purple-400 group-hover:text-purple-300 transition-colors">
+                        <span className="text-sm font-medium">Start Building</span>
+                        <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </CardContent>
+                  </Card>
                 </Link>
               </div>
 
