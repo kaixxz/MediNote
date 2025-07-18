@@ -597,7 +597,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
                 </>
               )}
               <span className="save-text">Save Draft</span>
-              <span className="success-text opacity-0">Saved!</span>
+              <span className="success-text opacity-0 absolute">Saved!</span>
             </Button>
             
             {/* Patient Assistant Sheet */}
@@ -1050,8 +1050,8 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
 
         {/* AI Review Sidebar */}
         <Dialog open={showReview} onOpenChange={setShowReview}>
-          <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden p-0 fixed top-[5vh] left-1/2 transform -translate-x-1/2">
-            <div className="flex h-[80vh]">
+          <DialogContent className="max-w-6xl max-h-[90vh] p-0 fixed top-[5vh] left-1/2 transform -translate-x-1/2 z-[100]">
+            <div className="flex h-[80vh] overflow-hidden">
               {/* Report Content */}
               <div className="flex-1 p-6 overflow-y-auto">
                 <DialogHeader className="mb-6">
@@ -1080,7 +1080,7 @@ export default function SoapBuilder({ reportType = "soap", setReportType }: Soap
               </div>
               
               {/* AI Review Sidebar */}
-              <div className="w-96 bg-gradient-to-br from-slate-900 to-slate-800 border-l border-slate-700 overflow-y-auto">
+              <div className="w-96 bg-gradient-to-br from-slate-900 to-slate-800 border-l border-slate-700 overflow-y-auto max-h-full">
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-6">
                     <div className="p-2 bg-yellow-500/20 rounded-lg">

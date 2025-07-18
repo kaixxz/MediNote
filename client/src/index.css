@@ -6,6 +6,7 @@
 [data-save-button] {
   position: relative;
   overflow: hidden;
+  min-width: 120px;
 }
 
 [data-save-button] .save-icon,
@@ -16,6 +17,9 @@
 [data-save-button] .check-icon,
 [data-save-button] .success-text {
   position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   transition: all 0.3s ease;
 }
 
@@ -31,12 +35,21 @@
 
 [data-save-button].save-success .check-icon {
   opacity: 1 !important;
-  transform: translateX(0);
+  transform: translate(-50%, -50%);
 }
 
 [data-save-button].save-success .success-text {
   opacity: 1 !important;
-  transform: translateX(0);
+  transform: translate(-50%, -50%);
+}
+
+/* AI Review Dialog fixes */
+[data-radix-dialog-overlay] {
+  z-index: 1000 !important;
+}
+
+[data-radix-dialog-content] {
+  z-index: 1001 !important;
 }
 
 /* Custom animations */
